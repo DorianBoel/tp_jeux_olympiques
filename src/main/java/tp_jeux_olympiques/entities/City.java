@@ -1,7 +1,10 @@
 package tp_jeux_olympiques.entities;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -31,6 +34,27 @@ public class City {
 	public City(String name) {
 		this.name = name;
 	}
+	
+	public void addEdition(OlympicGamesEdition olympicGamesEdition) {
+		olympicGamesEditions.add(olympicGamesEdition);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof City)) {
+			return false;
+		}
+		City other = (City) obj;
+		return Objects.equals(name, other.name);
+	}
 
 	/**
 	 * Getter for {@link #id}.
@@ -55,8 +79,8 @@ public class City {
 	 *
 	 * @return
 	 */
-	public Set<OlympicGamesEdition> getOlympicGamesEditions() {
-		return Collections.unmodifiableSet(olympicGamesEditions);
+	public List<OlympicGamesEdition> getOlympicGamesEditions() {
+		return Collections.unmodifiableList(new ArrayList<>(olympicGamesEditions));
 	}
 
 	/**

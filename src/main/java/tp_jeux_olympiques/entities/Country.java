@@ -1,7 +1,10 @@
 package tp_jeux_olympiques.entities;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -13,17 +16,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import tp_jeux_olympiques.interfaces.Translatable;
 
 @Entity
 @Table(name = "country")
-public class Country {
+public class Country implements Translatable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(nullable = false, length = 50)
-	private String name;
 	
 	@Column(name = "code_iso", unique = true, length = 3)
 	private String codeISO;
@@ -39,15 +40,39 @@ public class Country {
 	private TextContent textContent;
 
 	public Country() { }
-
-	public Country(String name, boolean obsolete) {
-		this.name = name;
+	
+	public Country(String name, Language language, String codeISO, boolean obsolete) {
+		this.textContent = new TextContent(name, language);
 		this.obsolete = obsolete;
+		this.codeISO = codeISO;
+	}
+
+	public void addTeam(Team team) {
+		this.teams.add(team);
 	}
 	
-	public Country(String name, String codeISO, boolean obsolete) {
-		this(name, obsolete);
-		this.codeISO = codeISO;
+	@Override
+	public String translate(Language language) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(codeISO, obsolete, textContent);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Country)) {
+			return false;
+		}
+		Country other = (Country) obj;
+		return Objects.equals(codeISO, other.codeISO) && obsolete == other.obsolete
+				&& Objects.equals(textContent, other.textContent);
 	}
 
 	/**
@@ -56,7 +81,7 @@ public class Country {
 	 * @return
 	 */
 	public String getName() {
-		return name;
+		return textContent.getText();
 	}
 
 	/**
@@ -82,8 +107,8 @@ public class Country {
 	 *
 	 * @return
 	 */
-	public Set<Team> getTeams() {
-		return Collections.unmodifiableSet(teams);
+	public List<Team> getTeams() {
+		return Collections.unmodifiableList(new ArrayList<>(teams));
 	}
 	
 	/**
@@ -91,6 +116,7 @@ public class Country {
 	 *
 	 * @return
 	 */
+	@Override
 	public TextContent getTextContent() {
 		return textContent;
 	}
@@ -101,7 +127,7 @@ public class Country {
 	 * @param The new ATTRIBUTE to replace the current one
 	 */
 	public void setName(String name) {
-		this.name = name;
+		textContent.setText(name);
 	}
 
 	/**
@@ -127,6 +153,7 @@ public class Country {
 	 *
 	 * @param The new ATTRIBUTE to replace the current one
 	 */
+	@Override
 	public void setTextContent(TextContent textContent) {
 		this.textContent = textContent;
 	}

@@ -1,7 +1,10 @@
 package tp_jeux_olympiques.entities;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -50,6 +53,28 @@ public class Athlete {
 		this.height = height;
 		this.weight = weight;
 		this.sex = sex;
+	}
+	
+	public void addPerformance (Performance performance) {
+		performances.add(performance);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(birthYear, height, name, sex, weight);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Athlete)) {
+			return false;
+		}
+		Athlete other = (Athlete) obj;
+		return Objects.equals(birthYear, other.birthYear) && Objects.equals(height, other.height)
+				&& Objects.equals(name, other.name) && sex == other.sex && Objects.equals(weight, other.weight);
 	}
 
 	/**
@@ -111,8 +136,8 @@ public class Athlete {
 	 *
 	 * @return
 	 */
-	public Set<Performance> getPerformances() {
-		return Collections.unmodifiableSet(performances);
+	public List<Performance> getPerformances() {
+		return Collections.unmodifiableList(new ArrayList<>(performances));
 	}
 
 	/**

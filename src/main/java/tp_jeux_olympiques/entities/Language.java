@@ -1,5 +1,7 @@
 package tp_jeux_olympiques.entities;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +20,7 @@ public class Language {
 	@Column(nullable = false, length = 50)
 	private String name;
 	
-	@Column(nullable = false, length = 2)
+	@Column(nullable = false, unique = true, length = 2)
 	private String codeISO;
 	
 	public Language() { }
@@ -26,6 +28,23 @@ public class Language {
 	public Language(String name, String codeIso) {
 		this.name = name;
 		this.codeISO = codeIso;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(codeISO, name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Language)) {
+			return false;
+		}
+		Language other = (Language) obj;
+		return Objects.equals(codeISO, other.codeISO) && Objects.equals(name, other.name);
 	}
 
 	/**

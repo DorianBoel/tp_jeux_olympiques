@@ -1,7 +1,10 @@
 package tp_jeux_olympiques.entities;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -17,17 +20,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import tp_jeux_olympiques.enums.Distinction;
+import tp_jeux_olympiques.interfaces.Translatable;
 
 @Entity
 @Table(name = "event")
-public class Event {
+public class Event implements Translatable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(nullable = false, length = 100)
-	public String label;
 	
 	@Column(nullable = false, length = 15)
 	@Enumerated(value = EnumType.STRING)
@@ -46,10 +47,39 @@ public class Event {
 
 	public Event() { }
 
-	public Event(String label, Distinction distinction, Sport sport) {
-		this.label = label;
+	public Event(String label, Language language, Distinction distinction, Sport sport) {
+		textContent = new TextContent(label, language);
 		this.distinction = distinction;
 		this.sport = sport;
+		sport.addEvent(this);
+	}
+
+	public void addPerformance(Performance performance) {
+		performances.add(performance);
+	}
+	
+	@Override
+	public String translate(Language language) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(sport, textContent);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Event)) {
+			return false;
+		}
+		Event other = (Event) obj;
+		return Objects.equals(sport, other.sport)
+				&& Objects.equals(textContent, other.textContent);
 	}
 
 	/**
@@ -67,7 +97,7 @@ public class Event {
 	 * @return
 	 */
 	public String getLabel() {
-		return label;
+		return textContent.getText();
 	}
 
 	/**
@@ -93,8 +123,8 @@ public class Event {
 	 *
 	 * @return
 	 */
-	public Set<Performance> getPerformances() {
-		return Collections.unmodifiableSet(performances);
+	public List<Performance> getPerformances() {
+		return Collections.unmodifiableList(new ArrayList<>(performances));
 	}
 	
 	/**
@@ -102,6 +132,7 @@ public class Event {
 	 *
 	 * @return
 	 */
+	@Override
 	public TextContent getTextContent() {
 		return textContent;
 	}
@@ -112,7 +143,7 @@ public class Event {
 	 * @param The new ATTRIBUTE to replace the current one
 	 */
 	public void setLabel(String label) {
-		this.label = label;
+		textContent.setText(label);
 	}
 
 	/**
@@ -138,6 +169,7 @@ public class Event {
 	 *
 	 * @param The new ATTRIBUTE to replace the current one
 	 */
+	@Override
 	public void setTextContent(TextContent textContent) {
 		this.textContent = textContent;
 	}

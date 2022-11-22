@@ -2,6 +2,7 @@ package tp_jeux_olympiques.entities;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -36,15 +37,30 @@ public class Team {
 	private Set<Performance> performances = new HashSet<>();
 
 	public Team() { }
-
-	public Team(String name, String codeIOC) {
-		this.name = name;
-		this.codeIOC = codeIOC;
-	}
 	
 	public Team(String name, String codeIOC, Country country) {
-		this(name, codeIOC);
+		this.name = name;
+		this.codeIOC = codeIOC;
 		this.country = country;
+		country.addTeam(this);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(codeIOC, country, name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Team)) {
+			return false;
+		}
+		Team other = (Team) obj;
+		return Objects.equals(codeIOC, other.codeIOC) && Objects.equals(country, other.country)
+				&& Objects.equals(name, other.name);
 	}
 
 	/**

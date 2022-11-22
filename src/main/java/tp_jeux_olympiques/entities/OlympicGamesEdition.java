@@ -1,7 +1,10 @@
 package tp_jeux_olympiques.entities;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -45,6 +48,28 @@ public class OlympicGamesEdition {
 		this.year = year;
 		this.season = season;
 		this.city = city;
+		city.addEdition(this);
+	}
+	
+	public void addPerformance(Performance performance) {
+		performances.add(performance);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(city, season, year);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof OlympicGamesEdition)) {
+			return false;
+		}
+		OlympicGamesEdition other = (OlympicGamesEdition) obj;
+		return Objects.equals(city, other.city) && season == other.season && year == other.year;
 	}
 
 	/**
@@ -88,8 +113,8 @@ public class OlympicGamesEdition {
 	 *
 	 * @return
 	 */
-	public Set<Performance> getPerformances() {
-		return Collections.unmodifiableSet(performances);
+	public List<Performance> getPerformances() {
+		return Collections.unmodifiableList(new ArrayList<>(performances));
 	}
 
 	/**

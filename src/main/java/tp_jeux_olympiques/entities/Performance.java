@@ -1,5 +1,7 @@
 package tp_jeux_olympiques.entities;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,8 +44,33 @@ public class Performance {
 
 	public Performance() { }
 
-	public Performance(Medal medal) {
+	public Performance(Athlete athlete, Event event, Team team, OlympicGamesEdition olympicGamesEdition, Medal medal) {
+		this.athlete = athlete;
+		athlete.addPerformance(this);
+		this.event = event;
+		event.addPerformance(this);
+		this.team = team;
+		this.olympicGamesEdition = olympicGamesEdition;
+		olympicGamesEdition.addPerformance(this);
 		this.medal = medal;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(athlete, event, medal, olympicGamesEdition, team);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Performance)) {
+			return false;
+		}
+		Performance other = (Performance) obj;
+		return Objects.equals(athlete, other.athlete) && Objects.equals(event, other.event) && medal == other.medal
+				&& Objects.equals(olympicGamesEdition, other.olympicGamesEdition) && Objects.equals(team, other.team);
 	}
 
 	/**

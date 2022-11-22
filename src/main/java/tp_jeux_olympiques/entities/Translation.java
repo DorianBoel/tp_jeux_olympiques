@@ -1,6 +1,7 @@
 package tp_jeux_olympiques.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -37,6 +38,26 @@ public class Translation {
 		this.value = value;
 		this.language = language;
 		this.textContent = textContent;
+		textContent.addTranslation(this);
+		id = new TranslationKey(language.getId(), textContent.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(language, textContent, value);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Translation)) {
+			return false;
+		}
+		Translation other = (Translation) obj;
+		return Objects.equals(language, other.language) && Objects.equals(textContent, other.textContent)
+				&& Objects.equals(value, other.value);
 	}
 
 	/**
