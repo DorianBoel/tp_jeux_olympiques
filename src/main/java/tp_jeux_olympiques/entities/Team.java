@@ -26,7 +26,7 @@ public class Team {
 	@Column(nullable = false, length = 50)
 	private String name;
 	
-	@Column(name = "code_ioc", nullable = false, unique = true, length = 3)
+	@Column(name = "code_ioc", nullable = false, length = 3)
 	private String codeIOC;
 	
 	@ManyToOne

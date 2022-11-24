@@ -2,11 +2,14 @@ package tp_jeux_olympiques.entities;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,11 +19,21 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import tp_jeux_olympiques.LanguageRepository;
+import tp_jeux_olympiques.LineIndex;
 import tp_jeux_olympiques.interfaces.Translatable;
 
 @Entity
 @Table(name = "country")
 public class Country implements Translatable {
+	
+	private static LanguageRepository langRepository = LanguageRepository.getInstance();
+	
+	private static Map<Language, LineIndex> translationIndexes = new HashMap<>();
+	
+	static {
+		translationIndexes.put(langRepository.get("fr"), LineIndex.COUNTRY_NAME_FR);
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +48,7 @@ public class Country implements Translatable {
 	@OneToMany(mappedBy = "country")
 	private Set<Team> teams = new HashSet<>();
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "id_text_content")
 	private TextContent textContent;
 
@@ -156,6 +169,11 @@ public class Country implements Translatable {
 	@Override
 	public void setTextContent(TextContent textContent) {
 		this.textContent = textContent;
+	}
+
+	@Override
+	public LineIndex getTranslationIndex(Language language) {
+		return translationIndexes.get(language);
 	}
 
 }
