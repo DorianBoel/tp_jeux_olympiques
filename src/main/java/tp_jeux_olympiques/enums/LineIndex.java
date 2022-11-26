@@ -1,4 +1,4 @@
-package tp_jeux_olympiques;
+package tp_jeux_olympiques.enums;
 
 public enum LineIndex {
 

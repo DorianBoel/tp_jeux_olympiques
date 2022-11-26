@@ -2,10 +2,8 @@ package tp_jeux_olympiques.entities;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,22 +20,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import tp_jeux_olympiques.LanguageRepository;
-import tp_jeux_olympiques.LineIndex;
 import tp_jeux_olympiques.enums.Distinction;
 import tp_jeux_olympiques.interfaces.Translatable;
 
 @Entity
 @Table(name = "event")
 public class Event implements Translatable {
-	
-	private static LanguageRepository langRepository = LanguageRepository.getInstance();
-	
-	private static Map<Language, LineIndex> translationIndexes = new HashMap<>();
-	
-	static {
-		translationIndexes.put(langRepository.get("fr"), LineIndex.EVENT_LABEL_FR);
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,12 +47,16 @@ public class Event implements Translatable {
 	private TextContent textContent;
 
 	public Event() { }
-
-	public Event(String label, Language language, Distinction distinction, Sport sport) {
-		textContent = new TextContent(label, language);
+	
+	public Event (TextContent textContent, Distinction distinction, Sport sport) {
+		this.textContent = textContent;
 		this.distinction = distinction;
 		this.sport = sport;
 		sport.addEvent(this);
+	}
+
+	public Event(String label, Language language, Distinction distinction, Sport sport) {
+		this(new TextContent(label, language), distinction, sport);
 	}
 
 	public void addPerformance(Performance performance) {
@@ -185,11 +177,6 @@ public class Event implements Translatable {
 	@Override
 	public void setTextContent(TextContent textContent) {
 		this.textContent = textContent;
-	}
-	
-	@Override
-	public LineIndex getTranslationIndex(Language language) {
-		return translationIndexes.get(language);
 	}
 	
 }

@@ -61,7 +61,7 @@ public class Athlete {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(birthYear, height, name, sex, weight);
+		return Objects.hash(height, name, sex, weight);
 	}
 
 	@Override
@@ -73,8 +73,8 @@ public class Athlete {
 			return false;
 		}
 		Athlete other = (Athlete) obj;
-		return Objects.equals(birthYear, other.birthYear) && Objects.equals(height, other.height)
-				&& Objects.equals(name, other.name) && sex == other.sex && Objects.equals(weight, other.weight);
+		return Objects.equals(height, other.height) && Objects.equals(name, other.name)
+				&& sex == other.sex && Objects.equals(weight, other.weight);
 	}
 
 	/**

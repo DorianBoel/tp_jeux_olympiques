@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tp_jeux_olympiques.enums.CSVFileId;
+
 public final class FileAccess {
 	
 	private static FileAccess singletonInstance;

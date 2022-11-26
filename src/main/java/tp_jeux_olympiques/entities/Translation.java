@@ -44,9 +44,9 @@ public class Translation {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(language, textContent, value);
+		return Objects.hash(id, language, textContent, value);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -56,8 +56,8 @@ public class Translation {
 			return false;
 		}
 		Translation other = (Translation) obj;
-		return Objects.equals(language, other.language) && Objects.equals(textContent, other.textContent)
-				&& Objects.equals(value, other.value);
+		return Objects.equals(id, other.id) && Objects.equals(language, other.language)
+				&& Objects.equals(textContent, other.textContent) && Objects.equals(value, other.value);
 	}
 
 	/**
@@ -138,6 +138,23 @@ public class Translation {
 	    	this.idLanguage = idLanguage;
 	    	this.idTextContent = idTextContent;
 	    }
+	    
+		@Override
+		public int hashCode() {
+			return Objects.hash(idLanguage, idTextContent);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof TranslationKey)) {
+				return false;
+			}
+			TranslationKey other = (TranslationKey) obj;
+			return idLanguage == other.idLanguage && idTextContent == other.idTextContent;
+		}
 
 		/**
 		 * Getter for {@link #idLanguage}.
