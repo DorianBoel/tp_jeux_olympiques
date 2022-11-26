@@ -1,6 +1,5 @@
 package tp_jeux_olympiques.services;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -10,52 +9,50 @@ import java.util.regex.Pattern;
 
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.LanguageRepository;
-import tp_jeux_olympiques.LineIndex;
-import tp_jeux_olympiques.UndefinedEntityManagerException;
 import tp_jeux_olympiques.entities.Event;
 import tp_jeux_olympiques.entities.Language;
 import tp_jeux_olympiques.entities.Sport;
-import tp_jeux_olympiques.entities.Translation;
+import tp_jeux_olympiques.entities.TextContent;
 import tp_jeux_olympiques.enums.Distinction;
+import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.interfaces.TranslatableService;
 
-public class EventService {
+public class EventService implements TranslatableService<Event> {
 
 	private EntityManager entityManager;
-	private LanguageRepository languageRepository = LanguageRepository.getInstance();
+	private LanguageRepository languageRepo;
 	private SportService sportService;
-	private TranslationService translationService;
 
 	private Set<Event> events = new HashSet<>();
 	
-	public EventService(SportService sportService, TranslationService translationService) {
+	public EventService(EntityManager entityManager, LanguageRepository languageRepo,
+			SportService sportService)
+	{
+		this.entityManager = entityManager;
+		this.languageRepo = languageRepo;
 		this.sportService = sportService;
-		this.translationService = translationService;
 	}
 	
-	public Event parse(List<String> lineValues, List<String> eventLines) throws UndefinedEntityManagerException {
+	public Event parse(List<String> lineValues, List<String> eventLines) {
 		String label = lineValues.get(LineIndex.EVENT.INDEX);
 		String sportName = lineValues.get(LineIndex.SPORT.INDEX);
 		Distinction distinction = parseDistinction(label);
-		if (label.startsWith(sportName + " ")) {
-			label = label.replace(sportName + " ", "");
+		String sportNameStart = sportName + LineIndex.SEPARATOR_SPACE;
+		if (label.startsWith(sportNameStart)) {
+			label = label.replace(sportNameStart, "");
 		}
 		Sport sport = sportService.findByLabel(sportName);
-		Event event = create(label, languageRepository.get("en"), distinction, sport);
-		String labelFR = null;
-		for (String line : eventLines) {
-			List<String> eventLineValues = Arrays.asList(line.split(LineIndex.SEPARATOR_SEMICOLON));
-			String labelEN = eventLineValues.get(LineIndex.EVENT_LABEL_EN.INDEX);
-			if (labelEN.equals(label)) {
-				labelFR = eventLineValues.get(LineIndex.EVENT_LABEL_FR.INDEX);
-			}
-		}
-		Translation translation = translationService.create(event, languageRepository.get("fr"), labelFR);
-		translationService.save(translation);
+		TextContent textContent = createTextContent(label, languageRepo.getLanguage("en"));
+		Event event = create(textContent, distinction, sport);
 		return event;
 	}
 
-	public Event create(String label, Language language, Distinction distinction, Sport sport) {
-		return new Event(label, language, distinction, sport);
+	public Event create(TextContent textContent, Distinction distinction, Sport sport) {
+		return new Event(textContent, distinction, sport);
+	}
+	
+	public TextContent createTextContent(String text, Language language) {
+		return new TextContent(text, languageRepo.getLanguage("en"));
 	}
 	
 	public Distinction parseDistinction(String label) {
@@ -70,17 +67,16 @@ public class EventService {
 		return Distinction.MIXED;
 	}
 	
-	public Event save(Event event) throws UndefinedEntityManagerException {
-		if (entityManager == null) {
-			String message = String.format("The entity manager is undefined for the class %s", this.getClass());
-			throw new UndefinedEntityManagerException(message);
-		}
+	public Event register(Event event) {
 		if (events.add(event)) {			
-			entityManager.persist(event);
-		} else {
-			return find(event);
+			save(event);
+			return event;
 		}
-		return event;
+		return find(event);
+	}
+	
+	private void save(Event event) {
+		entityManager.persist(event);
 	}
 	
 	public Event find(Event event) {
@@ -90,12 +86,8 @@ public class EventService {
 			.orElse(event);		
 	}
 	
-	public Set<Event> getEvents() {
+	public Set<Event> getRegistered() {
 		return Collections.unmodifiableSet(events);
-	}
-	
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 	
 }

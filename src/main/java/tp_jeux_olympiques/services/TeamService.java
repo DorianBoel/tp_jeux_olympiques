@@ -8,19 +8,20 @@ import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
-import tp_jeux_olympiques.LineIndex;
-import tp_jeux_olympiques.UndefinedEntityManagerException;
 import tp_jeux_olympiques.entities.Country;
 import tp_jeux_olympiques.entities.Team;
+import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.interfaces.Service;
 
-public class TeamService {
+public class TeamService implements Service<Team> {
 
 	private EntityManager entityManager;
 	private CountryService countryService;
 	
 	private Set<Team> teams = new HashSet<>();
 	
-	public TeamService(CountryService countryService) {
+	public TeamService(EntityManager entityManager, CountryService countryService) {
+		this.entityManager = entityManager;
 		this.countryService = countryService;
 	}
 	
@@ -43,17 +44,16 @@ public class TeamService {
 		return new Team(name, codeIoc, country);
 	}
 	
-	public Team save(Team team) throws UndefinedEntityManagerException {
-		if (entityManager == null) {
-			String message = String.format("The entity manager is undefined for the class %s", this.getClass());
-			throw new UndefinedEntityManagerException(message);
-		}
+	public Team register(Team team) {
 		if (teams.add(team)) {			
 			entityManager.persist(team);
-		} else {
-			return find(team);
+			return team;
 		}
-		return team;
+		return find(team);
+	}
+	
+	public void save(Team team) {
+		entityManager.persist(team);
 	}
 	
 	public Team find(Team team) {
@@ -63,12 +63,8 @@ public class TeamService {
 			.orElse(team);		
 	}
 	
-	public Set<Team> getTeams() {
+	public Set<Team> getRegistered() {
 		return Collections.unmodifiableSet(teams);
-	}
-	
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 	
 }

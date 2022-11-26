@@ -3,40 +3,56 @@ package tp_jeux_olympiques.services;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.LanguageRepository;
-import tp_jeux_olympiques.LineIndex;
-import tp_jeux_olympiques.UndefinedEntityManagerException;
-import tp_jeux_olympiques.entities.Language;
 import tp_jeux_olympiques.entities.Sport;
+import tp_jeux_olympiques.entities.TextContent;
+import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.interfaces.TranslatableService;
 
-public class SportService {
+public class SportService implements TranslatableService<Sport> {
 
 	private EntityManager entityManager;
-	private LanguageRepository languageRepository = LanguageRepository.getInstance();
+	private LanguageRepository languageRepo;
+	
+	public SportService(EntityManager entityManager, LanguageRepository languageRepo) {
+		this.entityManager = entityManager;
+		this.languageRepo = languageRepo;
+	}
 	
 	private Set<Sport> sports = new HashSet<>();
 	
 	public Sport parse(List<String> lineValues) {
 		String nameEN = lineValues.get(LineIndex.SPORT_LABEL_EN.INDEX);
-		return create(nameEN, languageRepository.get("en"));
+		TextContent textContent = createTextContent(nameEN, languageRepo.getLanguage("en"));
+		return create(textContent);
 	}
 
-	public Sport create(String label, Language language) {
-		return new Sport(label, language);
+	public Sport create(TextContent textContent) {
+		return new Sport(textContent);
 	}
 	
-	public void save(Sport sport) throws UndefinedEntityManagerException {
-		if (entityManager == null) {
-			String message = String.format("The entity manager is undefined for the class %s", this.getClass());
-			throw new UndefinedEntityManagerException(message);
-		}
+	@Override
+	public Sport register(Sport sport) {
 		if (sports.add(sport)) {			
-			entityManager.persist(sport);
+			save(sport);
+			return sport;
 		}
-		sports.add(sport);
+		return find(sport);
+	}
+	
+	private void save(Sport sport) {
+		entityManager.persist(sport);
+	}
+	
+	public Sport find(Sport sport) {
+		return sports.stream()
+			.filter(o -> Objects.equals(o, sport))
+			.findFirst()
+			.orElse(sport);	
 	}
 	
 	public Sport findByLabel(String label) {
@@ -46,12 +62,8 @@ public class SportService {
 			.orElse(null);
 	}
 	
-	public Set<Sport> getSports() {
+	public Set<Sport> getRegistered() {
 		return Collections.unmodifiableSet(sports);
-	}
-	
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 	
 }

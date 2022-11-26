@@ -7,26 +7,30 @@ import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
-import tp_jeux_olympiques.LineIndex;
-import tp_jeux_olympiques.UndefinedEntityManagerException;
 import tp_jeux_olympiques.entities.Athlete;
+import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.enums.Sex;
+import tp_jeux_olympiques.interfaces.Service;
 
-public class AthleteService {
+public class AthleteService implements Service<Athlete> {
 
 	private EntityManager entityManager;
 	
 	private Set<Athlete> athletes = new HashSet<>();
 	
+	public AthleteService(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
+	
 	public Athlete parse(List<String> lineValues) {
-		String name = lineValues.get(LineIndex.ATHLETE_NAME.INDEX);
+		String name = lineValues.get(LineIndex.ATHLETE_NAME.INDEX).replaceAll("\"(?!\")", "");
 		String ageStr = lineValues.get(LineIndex.ATHLETE_AGE.INDEX);
 		String heightStr = lineValues.get(LineIndex.ATHLETE_HEIGHT.INDEX);
 		String weightStr = lineValues.get(LineIndex.ATHLETE_WEIGHT.INDEX);
 		String sexStr = lineValues.get(LineIndex.ATHLETE_SEX.INDEX);
 		String yearStr = lineValues.get(LineIndex.GAMES_YEAR.INDEX);
 		Integer birthYear;
-		Float height = null, weight = null;
+		Float height, weight;
 		Sex sex = parseSex(sexStr);
 		try {
 			int year = Integer.parseInt(yearStr);
@@ -61,17 +65,16 @@ public class AthleteService {
 		return parsed;
 	}
 	
-	public Athlete save(Athlete athlete) throws UndefinedEntityManagerException {
-		if (entityManager == null) {
-			String message = String.format("The entity manager is undefined for the class %s", this.getClass());
-			throw new UndefinedEntityManagerException(message);
-		}
+	public Athlete register(Athlete athlete) {
 		if (athletes.add(athlete)) {			
-			entityManager.persist(athlete);
-		} else {
-			return find(athlete);
+			save(athlete);
+			return athlete;
 		}
-		return athlete;
+		return find(athlete);
+	}
+	
+	private void save(Athlete athlete) {
+		entityManager.persist(athlete);
 	}
 	
 	public Athlete find(Athlete athlete) {
@@ -81,12 +84,8 @@ public class AthleteService {
 			.orElse(athlete);		
 	}
 	
-	public Set<Athlete> getAthlete() {
+	public Set<Athlete> getRegistered() {
 		return Collections.unmodifiableSet(athletes);
-	}
-	
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 	
 }

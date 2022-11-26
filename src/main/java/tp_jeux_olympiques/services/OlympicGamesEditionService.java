@@ -7,17 +7,21 @@ import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
-import tp_jeux_olympiques.LineIndex;
-import tp_jeux_olympiques.UndefinedEntityManagerException;
 import tp_jeux_olympiques.entities.City;
 import tp_jeux_olympiques.entities.OlympicGamesEdition;
+import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.enums.Season;
+import tp_jeux_olympiques.interfaces.Service;
 
-public class OlympicGamesEditionService {
+public class OlympicGamesEditionService implements Service<OlympicGamesEdition> {
 
 	private EntityManager entityManager;
 	
 	private Set<OlympicGamesEdition> olympicGamesEditions = new HashSet<>();
+	
+	public OlympicGamesEditionService(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 	
 	public OlympicGamesEdition parse(List<String> lineValues, City city) {
 		String yearStr = lineValues.get(LineIndex.GAMES_YEAR.INDEX);
@@ -31,17 +35,16 @@ public class OlympicGamesEditionService {
 		return new OlympicGamesEdition(year, season, city);
 	}
 	
-	public OlympicGamesEdition save(OlympicGamesEdition games) throws UndefinedEntityManagerException {
-		if (entityManager == null) {
-			String message = String.format("The entity manager is undefined for the class %s", this.getClass());
-			throw new UndefinedEntityManagerException(message);
-		}
+	public OlympicGamesEdition register(OlympicGamesEdition games) {
 		if (olympicGamesEditions.add(games)) {			
-			entityManager.persist(games);
-		} else {
-			return find(games);
+			save(games);
+			return games;
 		}
-		return games;
+		return find(games);
+	}
+	
+	private void save(OlympicGamesEdition games) {
+		entityManager.persist(games);
 	}
 	
 	public OlympicGamesEdition find(OlympicGamesEdition games) {
@@ -51,12 +54,8 @@ public class OlympicGamesEditionService {
 			.orElse(games);		
 	}
 	
-	public Set<OlympicGamesEdition> getOlympicGamesEdition() {
+	public Set<OlympicGamesEdition> getRegistered() {
 		return Collections.unmodifiableSet(olympicGamesEditions);
-	}
-	
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 	
 }

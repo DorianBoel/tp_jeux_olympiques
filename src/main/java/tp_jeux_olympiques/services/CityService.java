@@ -7,15 +7,19 @@ import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
-import tp_jeux_olympiques.LineIndex;
-import tp_jeux_olympiques.UndefinedEntityManagerException;
 import tp_jeux_olympiques.entities.City;
+import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.interfaces.Service;
 
-public class CityService {
+public class CityService implements Service<City> {
 
 	private EntityManager entityManager;
 	
 	private Set<City> cities = new HashSet<>();
+	
+	public CityService(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 	
 	public City parse(List<String> lineValues) {
 		String name = lineValues.get(LineIndex.CITY.INDEX);
@@ -26,17 +30,16 @@ public class CityService {
 		return new City(name);
 	}
 	
-	public City save(City city) throws UndefinedEntityManagerException {
-		if (entityManager == null) {
-			String message = String.format("The entity manager is undefined for the class %s", this.getClass());
-			throw new UndefinedEntityManagerException(message);
-		}
+	public City register(City city) {
 		if (cities.add(city)) {			
-			entityManager.persist(city);
-		} else {
-			return find(city);
+			save(city);
+			return city;
 		}
-		return city;
+		return find(city);
+	}
+	
+	private void save(City city) {
+		entityManager.persist(city);
 	}
 	
 	public City find(City city) {
@@ -46,12 +49,8 @@ public class CityService {
 			.orElse(city);		
 	}
 	
-	public Set<City> getCities() {
+	public Set<City> getRegistered() {
 		return Collections.unmodifiableSet(cities);
-	}
-	
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 	
 }
