@@ -27,10 +27,8 @@ public class CountryService implements TranslatableService<Country> {
 	
 	public Country parse(List<String> lineValues) {
 		String name = lineValues.get(LineIndex.COUNTRY_NAME_EN.INDEX);
-		String isoCode = lineValues.get(LineIndex.COUNTRY_ISO.INDEX);
-		isoCode = isoCode.length() > 0 ? isoCode : null;
-		String obsoleteStr = lineValues.get(LineIndex.COUNTRY_OBSOLETE.INDEX);
-		boolean obsolete = obsoleteStr.equals("O");
+		String isoCode = parseIsoCode(lineValues);
+		boolean obsolete = lineValues.get(LineIndex.COUNTRY_OBSOLETE.INDEX).equals("O");
 		TextContent textContent = createTextContent(name, languageRepo.getLanguage("en"));
 		return create(textContent, isoCode, obsolete);
 	}
@@ -45,6 +43,11 @@ public class CountryService implements TranslatableService<Country> {
 			return country;
 		}
 		return find(country);
+	}
+	
+	private String parseIsoCode(List<String> lineValues) {
+		String isoCode = lineValues.get(LineIndex.COUNTRY_ISO.INDEX);
+		return isoCode.length() > 0 ? isoCode : null;
 	}
 	
 	private void save(Country country) {

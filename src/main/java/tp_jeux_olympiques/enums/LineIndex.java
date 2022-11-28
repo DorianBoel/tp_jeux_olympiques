@@ -26,7 +26,6 @@ public enum LineIndex {
 	COUNTRY_OBSOLETE(4);
 	
 	public static final String SEPARATOR_SEMICOLON = ";";
-	public static final String SEPARATOR_SPACE = " ";
 	
 	public final int INDEX;
 	

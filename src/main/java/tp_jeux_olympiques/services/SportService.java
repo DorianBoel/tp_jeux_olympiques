@@ -26,8 +26,8 @@ public class SportService implements TranslatableService<Sport> {
 	private Set<Sport> sports = new HashSet<>();
 	
 	public Sport parse(List<String> lineValues) {
-		String nameEN = lineValues.get(LineIndex.SPORT_LABEL_EN.INDEX);
-		TextContent textContent = createTextContent(nameEN, languageRepo.getLanguage("en"));
+		String name = lineValues.get(LineIndex.SPORT_LABEL_EN.INDEX);
+		TextContent textContent = createTextContent(name, languageRepo.getLanguage("en"));
 		return create(textContent);
 	}
 

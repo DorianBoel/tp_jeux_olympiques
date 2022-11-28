@@ -27,8 +27,7 @@ public class PerformanceService implements Service<Performance> {
 	}
 	
 	public Performance parse(List<String> lineValues, Athlete athlete, Event event, Team team, OlympicGamesEdition games) {
-		String medalStr = lineValues.get(LineIndex.MEDAL.INDEX);
-		Medal medal = parseMedal(medalStr);
+		Medal medal = parseMedal(lineValues);
 		return create(athlete, event, team, games, medal);
 	}
 
@@ -36,14 +35,14 @@ public class PerformanceService implements Service<Performance> {
 		return new Performance(athlete, event, team, games, medal);
 	}
 	
-	public Medal parseMedal(String str) {
-		Medal parsed = null;
+	public Medal parseMedal(List<String> lineValues) {
+		String medalStr = lineValues.get(LineIndex.MEDAL.INDEX);
 		for (Medal medal : Medal.values()) {
-			if (medal.toString().equalsIgnoreCase(str)) {
-				parsed = medal;
+			if (medal.toString().equalsIgnoreCase(medalStr)) {
+				return medal;
 			}
 		}
-		return parsed;
+		return null;
 	}
 	
 	public Performance register(Performance performance) {

@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.LanguageRepository;
 import tp_jeux_olympiques.entities.Event;
@@ -37,9 +39,9 @@ public class EventService implements TranslatableService<Event> {
 		String label = lineValues.get(LineIndex.EVENT.INDEX);
 		String sportName = lineValues.get(LineIndex.SPORT.INDEX);
 		Distinction distinction = parseDistinction(label);
-		String sportNameStart = sportName + LineIndex.SEPARATOR_SPACE;
+		String sportNameStart = sportName + StringUtils.SPACE;
 		if (label.startsWith(sportNameStart)) {
-			label = label.replace(sportNameStart, "");
+			label = label.replace(sportNameStart, StringUtils.EMPTY);
 		}
 		Sport sport = sportService.findByLabel(sportName);
 		TextContent textContent = createTextContent(label, languageRepo.getLanguage("en"));
@@ -55,7 +57,7 @@ public class EventService implements TranslatableService<Event> {
 		return new TextContent(text, languageRepo.getLanguage("en"));
 	}
 	
-	public Distinction parseDistinction(String label) {
+	private Distinction parseDistinction(String label) {
 		Pattern patternMen = Pattern.compile("\\b[Mm]en\\b");
 		Pattern patternWomen = Pattern.compile("\\b[Ww]omen\\b");
 		if (patternMen.matcher(label).find()) {

@@ -28,15 +28,7 @@ public class TeamService implements Service<Team> {
 	public Team parse(List<String> lineValues, List<String> countryLines) {
 		String name = lineValues.get(LineIndex.TEAM_NAME.INDEX);
 		String code = lineValues.get(LineIndex.TEAM_CODE.INDEX);
-		Country country = null;
-		for (String line : countryLines) {
-			List<String> countryLineValues = Arrays.asList(line.split(LineIndex.SEPARATOR_SEMICOLON));
-			String countryIOC = countryLineValues.get(LineIndex.COUNTRY_CIO.INDEX);
-			String countryName = countryLineValues.get(LineIndex.COUNTRY_NAME_EN.INDEX);
-			if (countryIOC.equals(code)) {
-				country = countryService.findByName(countryName);
-			}
-		}
+		Country country = parseCountry(code, countryLines);
 		return create(name, code, country);
 	}
 
@@ -46,14 +38,26 @@ public class TeamService implements Service<Team> {
 	
 	public Team register(Team team) {
 		if (teams.add(team)) {			
-			entityManager.persist(team);
+			save(team);
 			return team;
 		}
 		return find(team);
 	}
 	
-	public void save(Team team) {
+	private void save(Team team) {
 		entityManager.persist(team);
+	}
+	
+	private Country parseCountry(String code, List<String> countryLines) {
+		for (String line : countryLines) {
+			List<String> countryLineValues = Arrays.asList(line.split(LineIndex.SEPARATOR_SEMICOLON));
+			String countryIOC = countryLineValues.get(LineIndex.COUNTRY_CIO.INDEX);
+			String countryName = countryLineValues.get(LineIndex.COUNTRY_NAME_EN.INDEX);
+			if (countryIOC.equals(code)) {
+				return countryService.findByName(countryName);
+			}
+		}
+		return null;
 	}
 	
 	public Team find(Team team) {

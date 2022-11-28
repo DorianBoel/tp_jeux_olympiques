@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.entities.Athlete;
@@ -23,31 +27,16 @@ public class AthleteService implements Service<Athlete> {
 	}
 	
 	public Athlete parse(List<String> lineValues) {
-		String name = lineValues.get(LineIndex.ATHLETE_NAME.INDEX).replaceAll("\"(?!\")", "");
+		Function<String, Float> parseFloat = s -> NumberUtils.isCreatable(s) ? NumberUtils.createFloat(s) : null;
+		String name = lineValues.get(LineIndex.ATHLETE_NAME.INDEX).replaceAll("\"(?!\")", StringUtils.EMPTY);
 		String ageStr = lineValues.get(LineIndex.ATHLETE_AGE.INDEX);
 		String heightStr = lineValues.get(LineIndex.ATHLETE_HEIGHT.INDEX);
 		String weightStr = lineValues.get(LineIndex.ATHLETE_WEIGHT.INDEX);
-		String sexStr = lineValues.get(LineIndex.ATHLETE_SEX.INDEX);
 		String yearStr = lineValues.get(LineIndex.GAMES_YEAR.INDEX);
-		Integer birthYear;
-		Float height, weight;
-		Sex sex = parseSex(sexStr);
-		try {
-			int year = Integer.parseInt(yearStr);
-			birthYear = year - Integer.parseInt(ageStr);
-		} catch(NumberFormatException err) {
-			birthYear = null;
-		}
-		try {
-			height = Float.parseFloat(heightStr);
-		} catch(NumberFormatException err) {
-			height = null;
-		}
-		try {
-			weight = Float.parseFloat(weightStr);
-		} catch(NumberFormatException err) {
-			weight = null;
-		}
+		Float height = parseFloat.apply(heightStr);
+		Float weight = parseFloat.apply(weightStr);
+		Integer birthYear = parseBirthYear(yearStr, ageStr);
+		Sex sex = parseSex(lineValues);
 		return create(name, birthYear, height, weight, sex);
 	}
 
@@ -55,14 +44,23 @@ public class AthleteService implements Service<Athlete> {
 		return new Athlete(name, birthYear, height, weight, sex);
 	}
 	
-	public Sex parseSex(String str) {
-		Sex parsed = null;
+	private Sex parseSex(List<String> lineValues) {
+		String sexStr = lineValues.get(LineIndex.ATHLETE_SEX.INDEX);
 		for (Sex sex : Sex.values()) {
-			if (sex.getLabel().equals(str)) {
-				parsed = sex;
+			if (sex.getLabel().equals(sexStr)) {
+				return sex;
 			}
 		}
-		return parsed;
+		return null;
+	}
+	
+	private Integer parseBirthYear(String yearStr, String ageStr) {
+		try {
+			int year = Integer.parseInt(yearStr);
+			return year - NumberUtils.createInteger(ageStr);
+		} catch(NumberFormatException err) {
+			return null;
+		}
 	}
 	
 	public Athlete register(Athlete athlete) {
