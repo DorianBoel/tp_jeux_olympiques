@@ -2,6 +2,7 @@ package tp_jeux_olympiques.interfaces;
 
 import tp_jeux_olympiques.entities.Language;
 import tp_jeux_olympiques.entities.TextContent;
+import tp_jeux_olympiques.entities.Translation;
 
 public interface Translatable {
 
@@ -9,6 +10,18 @@ public interface Translatable {
 	
 	void setTextContent(TextContent textContent);
 	
-	String translate(Language language);
+	default String translate(Language language) {
+		TextContent tc = getTextContent();
+		if (tc.getLanguage().equals(language)) {
+			return tc.getText();
+		}
+		Translation tl = tc.getTranslations().stream()
+			.filter(t -> t.getLanguage().equals(language))
+			.findFirst().orElse(null);
+		if (tl != null) {
+			return tl.getValue();
+		}
+		return null;
+	};
 	
 }

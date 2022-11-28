@@ -44,12 +44,6 @@ public class Sport implements Translatable {
 	public void addEvent(Event event) {
 		events.add(event);
 	}
-	
-	@Override
-	public String translate(Language language) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public int hashCode() {

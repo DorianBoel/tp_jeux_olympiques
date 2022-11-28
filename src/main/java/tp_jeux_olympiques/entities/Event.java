@@ -64,12 +64,6 @@ public class Event implements Translatable {
 	}
 	
 	@Override
-	public String translate(Language language) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
 	public int hashCode() {
 		return Objects.hash(sport, textContent);
 	}
