@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.LanguageRepository;
 import tp_jeux_olympiques.entities.Event;
-import tp_jeux_olympiques.entities.Language;
 import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.TextContent;
 import tp_jeux_olympiques.enums.Distinction;
@@ -35,26 +34,15 @@ public class EventService implements TranslatableService<Event> {
 		this.sportService = sportService;
 	}
 	
-	public Event parse(List<String> lineValues, List<String> eventLines) {
-		String label = lineValues.get(LineIndex.EVENT.INDEX);
-		String sportName = lineValues.get(LineIndex.SPORT.INDEX);
-		Distinction distinction = parseDistinction(label);
-		String sportNameStart = sportName + StringUtils.SPACE;
-		if (label.startsWith(sportNameStart)) {
-			label = label.replace(sportNameStart, StringUtils.EMPTY);
-		}
-		Sport sport = sportService.findByLabel(sportName);
-		TextContent textContent = createTextContent(label, languageRepo.getLanguage("en"));
-		Event event = create(textContent, distinction, sport);
-		return event;
-	}
-
-	public Event create(TextContent textContent, Distinction distinction, Sport sport) {
-		return new Event(textContent, distinction, sport);
+	private void save(Event event) {
+		entityManager.persist(event);
 	}
 	
-	public TextContent createTextContent(String text, Language language) {
-		return new TextContent(text, languageRepo.getLanguage("en"));
+	private Event find(Event event) {
+		return events.stream()
+			.filter(o -> Objects.equals(o, event))
+			.findAny()
+			.orElse(event);		
 	}
 	
 	private Distinction parseDistinction(String label) {
@@ -68,7 +56,26 @@ public class EventService implements TranslatableService<Event> {
 		}
 		return Distinction.MIXED;
 	}
+
+	public Event create(TextContent textContent, Distinction distinction, Sport sport) {
+		return new Event(textContent, distinction, sport);
+	}
 	
+	public Event parse(List<String> lineValues, List<String> eventLines) {
+		String label = lineValues.get(LineIndex.EVENT.INDEX);
+		String sportName = lineValues.get(LineIndex.SPORT.INDEX);
+		Distinction distinction = parseDistinction(label);
+		String sportNameStart = sportName + StringUtils.SPACE;
+		if (label.startsWith(sportNameStart)) {
+			label = label.replace(sportNameStart, StringUtils.EMPTY);
+		}
+		Sport sport = sportService.findByLabel(sportName);
+		TextContent textContent = createTextContent(label, languageRepo.getLanguage("en"));
+		Event event = create(textContent, distinction, sport);
+		return event;
+	}
+	
+	@Override
 	public Event register(Event event) {
 		if (events.add(event)) {			
 			save(event);
@@ -77,18 +84,8 @@ public class EventService implements TranslatableService<Event> {
 		return find(event);
 	}
 	
-	private void save(Event event) {
-		entityManager.persist(event);
-	}
-	
-	public Event find(Event event) {
-		return events.stream()
-			.filter(o -> Objects.equals(o, event))
-			.findFirst()
-			.orElse(event);		
-	}
-	
-	public Set<Event> getRegistered() {
+	@Override
+	public Set<Event> getEntitySet() {
 		return Collections.unmodifiableSet(events);
 	}
 	

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import tp_jeux_olympiques.enums.CSVFileId;
+import tp_jeux_olympiques.enums.CSVFile;
 
 public final class FileAccess {
 	
@@ -25,18 +25,18 @@ public final class FileAccess {
 		return singletonInstance;
 	}
 	
-	private Map<CSVFileId, Path> filePaths = new HashMap<>();
+	private Map<CSVFile, Path> filePaths = new HashMap<>();
 	
 	private FileAccess() {
-		for (CSVFileId key : CSVFileId.values()) {
+		for (CSVFile key : CSVFile.values()) {
 			String uri = String.format("%s/%s", basePath, key.getFileName());
 			filePaths.put(key, Paths.get(uri));
 		}
 	}
 	
-	public List<String> getLines(CSVFileId fileId) throws FileNotFoundException {
+	public List<String> getLines(CSVFile fileName) throws FileNotFoundException {
 		
-		Path filePath = filePaths.get(fileId);
+		Path filePath = filePaths.get(fileName);
 		
 		try {
 			

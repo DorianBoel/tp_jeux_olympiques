@@ -25,25 +25,6 @@ public class TeamService implements Service<Team> {
 		this.countryService = countryService;
 	}
 	
-	public Team parse(List<String> lineValues, List<String> countryLines) {
-		String name = lineValues.get(LineIndex.TEAM_NAME.INDEX);
-		String code = lineValues.get(LineIndex.TEAM_CODE.INDEX);
-		Country country = parseCountry(code, countryLines);
-		return create(name, code, country);
-	}
-
-	public Team create(String name, String codeIoc, Country country) {
-		return new Team(name, codeIoc, country);
-	}
-	
-	public Team register(Team team) {
-		if (teams.add(team)) {			
-			save(team);
-			return team;
-		}
-		return find(team);
-	}
-	
 	private void save(Team team) {
 		entityManager.persist(team);
 	}
@@ -60,14 +41,35 @@ public class TeamService implements Service<Team> {
 		return null;
 	}
 	
-	public Team find(Team team) {
+	private Team find(Team team) {
 		return teams.stream()
 			.filter(o -> Objects.equals(o, team))
-			.findFirst()
+			.findAny()
 			.orElse(team);		
 	}
+
+	public Team create(String name, String codeIoc, Country country) {
+		return new Team(name, codeIoc, country);
+	}
 	
-	public Set<Team> getRegistered() {
+	public Team parse(List<String> lineValues, List<String> countryLines) {
+		String name = lineValues.get(LineIndex.TEAM_NAME.INDEX);
+		String code = lineValues.get(LineIndex.TEAM_CODE.INDEX);
+		Country country = parseCountry(code, countryLines);
+		return create(name, code, country);
+	}
+	
+	@Override
+	public Team register(Team team) {
+		if (teams.add(team)) {			
+			save(team);
+			return team;
+		}
+		return find(team);
+	}
+	
+	@Override
+	public Set<Team> getEntitySet() {
 		return Collections.unmodifiableSet(teams);
 	}
 	

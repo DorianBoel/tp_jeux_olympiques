@@ -23,6 +23,21 @@ public class OlympicGamesEditionService implements Service<OlympicGamesEdition> 
 		this.entityManager = entityManager;
 	}
 	
+	private void save(OlympicGamesEdition games) {
+		entityManager.persist(games);
+	}
+	
+	private OlympicGamesEdition find(OlympicGamesEdition games) {
+		return olympicGamesEditions.stream()
+			.filter(o -> Objects.equals(o, games))
+			.findAny()
+			.orElse(games);		
+	}
+
+	public OlympicGamesEdition create(int year, Season season, City city) {
+		return new OlympicGamesEdition(year, season, city);
+	}
+	
 	public OlympicGamesEdition parse(List<String> lineValues, City city) {
 		String yearStr = lineValues.get(LineIndex.GAMES_YEAR.INDEX);
 		String seasonStr = lineValues.get(LineIndex.GAMES_SEASON.INDEX);
@@ -30,11 +45,8 @@ public class OlympicGamesEditionService implements Service<OlympicGamesEdition> 
 		Season season = Season.valueOf(seasonStr.toUpperCase());
 		return create(year, season, city);
 	}
-
-	public OlympicGamesEdition create(int year, Season season, City city) {
-		return new OlympicGamesEdition(year, season, city);
-	}
 	
+	@Override
 	public OlympicGamesEdition register(OlympicGamesEdition games) {
 		if (olympicGamesEditions.add(games)) {			
 			save(games);
@@ -43,18 +55,8 @@ public class OlympicGamesEditionService implements Service<OlympicGamesEdition> 
 		return find(games);
 	}
 	
-	private void save(OlympicGamesEdition games) {
-		entityManager.persist(games);
-	}
-	
-	public OlympicGamesEdition find(OlympicGamesEdition games) {
-		return olympicGamesEditions.stream()
-			.filter(o -> Objects.equals(o, games))
-			.findFirst()
-			.orElse(games);		
-	}
-	
-	public Set<OlympicGamesEdition> getRegistered() {
+	@Override
+	public Set<OlympicGamesEdition> getEntitySet() {
 		return Collections.unmodifiableSet(olympicGamesEditions);
 	}
 	

@@ -15,7 +15,7 @@ import tp_jeux_olympiques.entities.Performance;
 import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.Team;
 import tp_jeux_olympiques.entities.Translation;
-import tp_jeux_olympiques.enums.CSVFileId;
+import tp_jeux_olympiques.enums.CSVFile;
 import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.services.AthleteService;
 import tp_jeux_olympiques.services.CityService;
@@ -60,10 +60,10 @@ public class DataLoader {
 	public void populate() throws FileNotFoundException {
 		Language langFR = languageRepo.getLanguage("fr");
 		
-		List<String> countryLines = fileAccess.getLines(CSVFileId.COUNTRY_CODES);
-		List<String> sportLines = fileAccess.getLines(CSVFileId.SPORTS_LIST);
-		List<String> eventLines = fileAccess.getLines(CSVFileId.EVENTS_LIST);
-		List<String> performanceLines = fileAccess.getLines(CSVFileId.SAMPLE);
+		List<String> countryLines = fileAccess.getLines(CSVFile.COUNTRY_CODES);
+		List<String> sportLines = fileAccess.getLines(CSVFile.SPORTS_LIST);
+		List<String> eventLines = fileAccess.getLines(CSVFile.EVENTS_LIST);
+		List<String> performanceLines = fileAccess.getLines(CSVFile.SAMPLE);
 		
 		for (int i = 1; i < countryLines.size(); i++) {
 			List<String> lineValues = splitLine(countryLines.get(i));

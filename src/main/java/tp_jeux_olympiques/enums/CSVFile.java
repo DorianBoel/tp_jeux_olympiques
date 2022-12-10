@@ -1,6 +1,6 @@
 package tp_jeux_olympiques.enums;
 
-public enum CSVFileId {
+public enum CSVFile {
 	
 	SAMPLE("sample"),
 	SPORTS_LIST("liste_des_sports"),
@@ -12,7 +12,7 @@ public enum CSVFileId {
 	
 	private String fileName;
 	
-	private CSVFileId(String fileName) {
+	private CSVFile(String fileName) {
 		this.fileName = fileName + CSV_EXTENSION;
 	}
 

@@ -21,15 +21,27 @@ public class CityService implements Service<City> {
 		this.entityManager = entityManager;
 	}
 	
-	public City parse(List<String> lineValues) {
-		String name = lineValues.get(LineIndex.CITY.INDEX);
-		return create(name);
+	private void save(City city) {
+		entityManager.persist(city);
+	}
+	
+	private City find(City city) {
+		return cities.stream()
+			.filter(o -> Objects.equals(o, city))
+			.findAny()
+			.orElse(city);		
 	}
 
 	public City create(String name) {
 		return new City(name);
 	}
 	
+	public City parse(List<String> lineValues) {
+		String name = lineValues.get(LineIndex.CITY.INDEX);
+		return create(name);
+	}
+	
+	@Override
 	public City register(City city) {
 		if (cities.add(city)) {			
 			save(city);
@@ -38,18 +50,8 @@ public class CityService implements Service<City> {
 		return find(city);
 	}
 	
-	private void save(City city) {
-		entityManager.persist(city);
-	}
-	
-	public City find(City city) {
-		return cities.stream()
-			.filter(o -> Objects.equals(o, city))
-			.findFirst()
-			.orElse(city);		
-	}
-	
-	public Set<City> getRegistered() {
+	@Override
+	public Set<City> getEntitySet() {
 		return Collections.unmodifiableSet(cities);
 	}
 	

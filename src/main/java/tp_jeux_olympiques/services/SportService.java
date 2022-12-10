@@ -18,21 +18,39 @@ public class SportService implements TranslatableService<Sport> {
 	private EntityManager entityManager;
 	private LanguageRepository languageRepo;
 	
+	private Set<Sport> sports = new HashSet<>();
+	
 	public SportService(EntityManager entityManager, LanguageRepository languageRepo) {
 		this.entityManager = entityManager;
 		this.languageRepo = languageRepo;
 	}
 	
-	private Set<Sport> sports = new HashSet<>();
+	private void save(Sport sport) {
+		entityManager.persist(sport);
+	}
+	
+	private Sport find(Sport sport) {
+		return sports.stream()
+			.filter(o -> Objects.equals(o, sport))
+			.findAny()
+			.orElse(sport);	
+	}
+
+	public Sport create(TextContent textContent) {
+		return new Sport(textContent);
+	}
 	
 	public Sport parse(List<String> lineValues) {
 		String name = lineValues.get(LineIndex.SPORT_LABEL_EN.INDEX);
 		TextContent textContent = createTextContent(name, languageRepo.getLanguage("en"));
 		return create(textContent);
 	}
-
-	public Sport create(TextContent textContent) {
-		return new Sport(textContent);
+	
+	public Sport findByLabel(String label) {
+		return sports.stream()
+			.filter(c -> c.getLabel().equals(label))
+			.findAny()
+			.orElse(null);
 	}
 	
 	@Override
@@ -44,25 +62,8 @@ public class SportService implements TranslatableService<Sport> {
 		return find(sport);
 	}
 	
-	private void save(Sport sport) {
-		entityManager.persist(sport);
-	}
-	
-	public Sport find(Sport sport) {
-		return sports.stream()
-			.filter(o -> Objects.equals(o, sport))
-			.findFirst()
-			.orElse(sport);	
-	}
-	
-	public Sport findByLabel(String label) {
-		return sports.stream()
-			.filter(c -> c.getLabel().equals(label))
-			.findFirst()
-			.orElse(null);
-	}
-	
-	public Set<Sport> getRegistered() {
+	@Override
+	public Set<Sport> getEntitySet() {
 		return Collections.unmodifiableSet(sports);
 	}
 	

@@ -6,6 +6,6 @@ public interface Service<T> {
 
 	T register(T entity);
 	
-	Set<T> getRegistered();
+	Set<T> getEntitySet();
 	
 }

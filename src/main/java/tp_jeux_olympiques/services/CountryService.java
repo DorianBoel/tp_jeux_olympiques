@@ -25,6 +25,26 @@ public class CountryService implements TranslatableService<Country> {
 		this.languageRepo = languageRepo;
 	}
 	
+	private void save(Country country) {
+		entityManager.persist(country);
+	}
+	
+	private Country find(Country country) {
+		return countries.stream()
+			.filter(o -> Objects.equals(o, country))
+			.findAny()
+			.orElse(null);
+	}
+	
+	private String parseIsoCode(List<String> lineValues) {
+		String isoCode = lineValues.get(LineIndex.COUNTRY_ISO.INDEX);
+		return isoCode.length() > 0 ? isoCode : null;
+	}
+
+	public Country create(TextContent textContent, String codeIso, boolean obsolete) {
+		return new Country(textContent, codeIso, obsolete);
+	}
+	
 	public Country parse(List<String> lineValues) {
 		String name = lineValues.get(LineIndex.COUNTRY_NAME_EN.INDEX);
 		String isoCode = parseIsoCode(lineValues);
@@ -32,11 +52,15 @@ public class CountryService implements TranslatableService<Country> {
 		TextContent textContent = createTextContent(name, languageRepo.getLanguage("en"));
 		return create(textContent, isoCode, obsolete);
 	}
-
-	public Country create(TextContent textContent, String codeIso, boolean obsolete) {
-		return new Country(textContent, codeIso, obsolete);
+	
+	public Country findByName(String name) {
+		return countries.stream()
+			.filter(c -> c.getName().equals(name))
+			.findAny()
+			.orElse(null);
 	}
 	
+	@Override
 	public Country register(Country country) {
 		if (countries.add(country)) {			
 			save(country);
@@ -45,30 +69,8 @@ public class CountryService implements TranslatableService<Country> {
 		return find(country);
 	}
 	
-	private String parseIsoCode(List<String> lineValues) {
-		String isoCode = lineValues.get(LineIndex.COUNTRY_ISO.INDEX);
-		return isoCode.length() > 0 ? isoCode : null;
-	}
-	
-	private void save(Country country) {
-		entityManager.persist(country);
-	}
-	
-	public Country find(Country country) {
-		return countries.stream()
-				.filter(o -> Objects.equals(o, country))
-				.findFirst()
-				.orElse(null);
-	}
-	
-	public Country findByName(String name) {
-		return countries.stream()
-			.filter(c -> c.getName().equals(name))
-			.findFirst()
-			.orElse(null);
-	}
-	
-	public Set<Country> getRegistered() {
+	@Override
+	public Set<Country> getEntitySet() {
 		return Collections.unmodifiableSet(countries);
 	}
 	

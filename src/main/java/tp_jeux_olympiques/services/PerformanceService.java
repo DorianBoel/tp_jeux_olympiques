@@ -26,16 +26,18 @@ public class PerformanceService implements Service<Performance> {
 		this.entityManager = entityManager;
 	}
 	
-	public Performance parse(List<String> lineValues, Athlete athlete, Event event, Team team, OlympicGamesEdition games) {
-		Medal medal = parseMedal(lineValues);
-		return create(athlete, event, team, games, medal);
-	}
-
-	public Performance create(Athlete athlete, Event event, Team team, OlympicGamesEdition games, Medal medal) {
-		return new Performance(athlete, event, team, games, medal);
+	private void save(Performance performance) {
+		entityManager.persist(performance);
 	}
 	
-	public Medal parseMedal(List<String> lineValues) {
+	private Performance find(Performance performance) {
+		return performances.stream()
+			.filter(o -> Objects.equals(o, performance))
+			.findAny()
+			.orElse(performance);
+	}
+	
+	private Medal parseMedal(List<String> lineValues) {
 		String medalStr = lineValues.get(LineIndex.MEDAL.INDEX);
 		for (Medal medal : Medal.values()) {
 			if (medal.toString().equalsIgnoreCase(medalStr)) {
@@ -44,7 +46,21 @@ public class PerformanceService implements Service<Performance> {
 		}
 		return null;
 	}
+
+	public Performance create(Athlete athlete, Event event,
+			Team team, OlympicGamesEdition games, Medal medal)
+	{
+		return new Performance(athlete, event, team, games, medal);
+	}
 	
+	public Performance parse(List<String> lineValues, Athlete athlete,
+			Event event, Team team, OlympicGamesEdition games)
+	{
+		Medal medal = parseMedal(lineValues);
+		return create(athlete, event, team, games, medal);
+	}
+	
+	@Override
 	public Performance register(Performance performance) {
 		if (performances.add(performance)) {			
 			save(performance);
@@ -53,18 +69,8 @@ public class PerformanceService implements Service<Performance> {
 		return find(performance);
 	}
 	
-	private void save(Performance performance) {
-		entityManager.persist(performance);
-	}
-	
-	public Performance find(Performance performance) {
-		return performances.stream()
-			.filter(o -> Objects.equals(o, performance))
-			.findFirst()
-			.orElse(performance);
-	}
-	
-	public Set<Performance> getRegistered() {
+	@Override
+	public Set<Performance> getEntitySet() {
 		return Collections.unmodifiableSet(performances);
 	}
 	

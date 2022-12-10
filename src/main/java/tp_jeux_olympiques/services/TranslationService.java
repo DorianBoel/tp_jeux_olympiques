@@ -1,6 +1,6 @@
 package tp_jeux_olympiques.services;
 
-import java.util.Arrays;
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,20 +39,38 @@ public class TranslationService implements Service<Translation> {
 		Language langEN = languageRepo.getLanguage("en");
 		Language langFR = languageRepo.getLanguage("fr");
 		
-		Map<Language, LineIndex> tlCountry = new HashMap<>();
-		tlCountry.put(langEN, LineIndex.COUNTRY_NAME_EN);
-		tlCountry.put(langFR, LineIndex.COUNTRY_NAME_FR);
+		Map<Language, LineIndex> tlCountry = Map.ofEntries(
+			new AbstractMap.SimpleEntry<Language, LineIndex>(langEN, LineIndex.COUNTRY_NAME_EN),
+			new AbstractMap.SimpleEntry<Language, LineIndex>(langFR, LineIndex.COUNTRY_NAME_FR)
+		);
 		translationIndexMap.put(Country.class, tlCountry);
 		
-		Map<Language, LineIndex> tlSport = new HashMap<>();
-		tlSport.put(langEN, LineIndex.SPORT_LABEL_EN);
-		tlSport.put(langFR, LineIndex.SPORT_LABEL_FR);
+		Map<Language, LineIndex> tlSport = Map.ofEntries(
+			new AbstractMap.SimpleEntry<Language, LineIndex>(langEN, LineIndex.SPORT_LABEL_EN),
+			new AbstractMap.SimpleEntry<Language, LineIndex>(langFR, LineIndex.SPORT_LABEL_FR)
+		);
 		translationIndexMap.put(Sport.class, tlSport);
 		
-		Map<Language, LineIndex> tlEvent = new HashMap<>();
-		tlEvent.put(langEN, LineIndex.EVENT_LABEL_EN);
-		tlEvent.put(langFR, LineIndex.EVENT_LABEL_FR);
+		Map<Language, LineIndex> tlEvent = Map.ofEntries(
+			new AbstractMap.SimpleEntry<Language, LineIndex>(langEN, LineIndex.EVENT_LABEL_EN),
+			new AbstractMap.SimpleEntry<Language, LineIndex>(langFR, LineIndex.EVENT_LABEL_FR)
+		);
 		translationIndexMap.put(Event.class, tlEvent);
+	}
+	
+	private void save(Translation translation) {	
+		entityManager.persist(translation);
+	}
+	
+	private Translation find(Translation translation) {
+		return translations.stream()
+			.filter(o -> Objects.equals(o, translation))
+			.findAny()
+			.orElse(translation);		
+	}
+	
+	public Translation create(Translatable object, Language language, String text) {
+		return new Translation(text, language, object.getTextContent());
 	}
 	
 	public Translation parse(Translatable object, Language language, List<String> lineValues) {
@@ -63,11 +81,12 @@ public class TranslationService implements Service<Translation> {
 	
 	public Translation parseCompare(Translatable object, Language language, List<String> dataLines) {
 		String parsed = null;
+		Class<? extends Translatable> tClass = object.getClass();
 		String textValue = object.getTextContent().getText();
-		LineIndex lineIdxEN = translationIndexMap.get(object.getClass()).get(languageRepo.getLanguage("en"));
-		LineIndex lineIdxTranslate = translationIndexMap.get(object.getClass()).get(languageRepo.getLanguage("fr"));
+		LineIndex lineIdxEN = translationIndexMap.get(tClass).get(languageRepo.getLanguage("en"));
+		LineIndex lineIdxTranslate = translationIndexMap.get(tClass).get(language);
 		for (String line : dataLines) {
-			List<String> dataLineValues = Arrays.asList(line.split(LineIndex.SEPARATOR_SEMICOLON));
+			List<String> dataLineValues = LineIndex.getLineValues(line);
 			String labelEN = dataLineValues.get(lineIdxEN.INDEX);
 			if (labelEN.equals(textValue)) {
 				parsed = dataLineValues.get(lineIdxTranslate.INDEX);
@@ -76,8 +95,8 @@ public class TranslationService implements Service<Translation> {
 		return create(object, language, parsed);
 	}
 	
-	public Translation create(Translatable object, Language language, String text) {
-		return new Translation(text, language, object.getTextContent());
+	public Map<Class<? extends Translatable>, Map<Language, LineIndex>> getTranslationIndexMap() {
+		return Collections.unmodifiableMap(translationIndexMap);
 	}
 	
 	@Override
@@ -89,24 +108,9 @@ public class TranslationService implements Service<Translation> {
 		return find(translation);
 	}
 	
-	private void save(Translation translation) {	
-		entityManager.persist(translation);
-	}
-	
-	public Translation find(Translation translation) {
-		return translations.stream()
-			.filter(o -> Objects.equals(o, translation))
-			.findFirst()
-			.orElse(translation);		
-	}
-	
 	@Override
-	public Set<Translation> getRegistered() {
+	public Set<Translation> getEntitySet() {
 		return Collections.unmodifiableSet(translations);
-	}
-	
-	public Map<Class<? extends Translatable>, Map<Language, LineIndex>> getTranslationindexMap() {
-		return Collections.unmodifiableMap(translationIndexMap);
 	}
 	
 }
