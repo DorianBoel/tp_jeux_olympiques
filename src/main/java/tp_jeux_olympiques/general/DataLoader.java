@@ -63,7 +63,7 @@ public class DataLoader {
 		List<String> countryLines = fileAccess.getLines(CSVFile.COUNTRY_CODES);
 		List<String> sportLines = fileAccess.getLines(CSVFile.SPORTS_LIST);
 		List<String> eventLines = fileAccess.getLines(CSVFile.EVENTS_LIST);
-		List<String> performanceLines = fileAccess.getLines(CSVFile.SAMPLE);
+		List<String> performanceLines = fileAccess.getLines(CSVFile.PERFORMANCES);
 		
 		for (int i = 1; i < countryLines.size(); i++) {
 			List<String> lineValues = splitLine(countryLines.get(i));

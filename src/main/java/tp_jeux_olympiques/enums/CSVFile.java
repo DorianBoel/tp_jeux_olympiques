@@ -2,7 +2,6 @@ package tp_jeux_olympiques.enums;
 
 public enum CSVFile {
 	
-	SAMPLE("sample"),
 	SPORTS_LIST("liste_des_sports"),
 	EVENTS_LIST("liste_des_epreuves"),
 	COUNTRY_CODES("wikipedia-iso-country-codes"),
