@@ -1,6 +1,5 @@
 package tp_jeux_olympiques.services;
 
-import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,10 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
-import tp_jeux_olympiques.entities.Country;
-import tp_jeux_olympiques.entities.Event;
 import tp_jeux_olympiques.entities.Language;
-import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.Translation;
 import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.general.LanguageRepository;
@@ -36,26 +32,13 @@ public class TranslationService implements Service<Translation> {
 	}
 	
 	private void loadTranslationMap() {
-		Language langEN = languageRepo.getLanguage("en");
-		Language langFR = languageRepo.getLanguage("fr");
-		
-		Map<Language, LineIndex> tlCountry = Map.ofEntries(
-			new AbstractMap.SimpleEntry<Language, LineIndex>(langEN, LineIndex.COUNTRY_NAME_EN),
-			new AbstractMap.SimpleEntry<Language, LineIndex>(langFR, LineIndex.COUNTRY_NAME_FR)
-		);
-		translationIndexMap.put(Country.class, tlCountry);
-		
-		Map<Language, LineIndex> tlSport = Map.ofEntries(
-			new AbstractMap.SimpleEntry<Language, LineIndex>(langEN, LineIndex.SPORT_LABEL_EN),
-			new AbstractMap.SimpleEntry<Language, LineIndex>(langFR, LineIndex.SPORT_LABEL_FR)
-		);
-		translationIndexMap.put(Sport.class, tlSport);
-		
-		Map<Language, LineIndex> tlEvent = Map.ofEntries(
-			new AbstractMap.SimpleEntry<Language, LineIndex>(langEN, LineIndex.EVENT_LABEL_EN),
-			new AbstractMap.SimpleEntry<Language, LineIndex>(langFR, LineIndex.EVENT_LABEL_FR)
-		);
-		translationIndexMap.put(Event.class, tlEvent);
+		for (Translatable.TranslatableType translatableType : Translatable.TranslatableType.values()) {
+			Map<Language, LineIndex> tlMap = new HashMap<>();
+			for (Map.Entry<String, LineIndex> entry : translatableType.getTranslationIndexes().entrySet()) {
+				tlMap.put(languageRepo.getLanguage(entry.getKey()), entry.getValue());
+			}
+			translationIndexMap.put(translatableType.getImplementation(), tlMap);
+		}
 	}
 	
 	private void save(Translation translation) {	
