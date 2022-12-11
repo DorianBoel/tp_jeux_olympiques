@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import tp_jeux_olympiques.general.DBAccess;
+import tp_jeux_olympiques.general.DataLoader;
 
 public class TpJeuxOlympiques {
 

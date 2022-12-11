@@ -7,10 +7,10 @@ import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
-import tp_jeux_olympiques.LanguageRepository;
 import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.TextContent;
 import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.general.LanguageRepository;
 import tp_jeux_olympiques.interfaces.TranslatableService;
 
 public class SportService implements TranslatableService<Sport> {

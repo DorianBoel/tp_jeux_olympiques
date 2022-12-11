@@ -10,12 +10,12 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.persistence.EntityManager;
-import tp_jeux_olympiques.LanguageRepository;
 import tp_jeux_olympiques.entities.Event;
 import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.TextContent;
 import tp_jeux_olympiques.enums.Distinction;
 import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.general.LanguageRepository;
 import tp_jeux_olympiques.interfaces.TranslatableService;
 
 public class EventService implements TranslatableService<Event> {

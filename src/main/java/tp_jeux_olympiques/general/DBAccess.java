@@ -1,4 +1,4 @@
-package tp_jeux_olympiques;
+package tp_jeux_olympiques.general;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;

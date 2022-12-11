@@ -10,13 +10,13 @@ import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.EntityManager;
-import tp_jeux_olympiques.LanguageRepository;
 import tp_jeux_olympiques.entities.Country;
 import tp_jeux_olympiques.entities.Event;
 import tp_jeux_olympiques.entities.Language;
 import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.Translation;
 import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.general.LanguageRepository;
 import tp_jeux_olympiques.interfaces.Service;
 import tp_jeux_olympiques.interfaces.Translatable;
 

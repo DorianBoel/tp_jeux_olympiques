@@ -20,7 +20,7 @@ public class Language {
 	@Column(nullable = false, length = 50)
 	private String name;
 	
-	@Column(nullable = false, unique = true, length = 2)
+	@Column(name = "code_iso", nullable = false, unique = true, length = 2)
 	private String codeISO;
 	
 	public Language() { }

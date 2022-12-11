@@ -1,4 +1,4 @@
-package tp_jeux_olympiques;
+package tp_jeux_olympiques.general;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
