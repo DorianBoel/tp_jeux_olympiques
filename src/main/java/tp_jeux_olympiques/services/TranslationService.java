@@ -11,6 +11,7 @@ import java.util.Set;
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.entities.Language;
 import tp_jeux_olympiques.entities.Translation;
+import tp_jeux_olympiques.enums.LanguageISOCode;
 import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.general.LanguageRepository;
 import tp_jeux_olympiques.interfaces.Service;
@@ -34,7 +35,7 @@ public class TranslationService implements Service<Translation> {
 	private void loadTranslationMap() {
 		for (Translatable.TranslatableType translatableType : Translatable.TranslatableType.values()) {
 			Map<Language, LineIndex> tlMap = new HashMap<>();
-			for (Map.Entry<String, LineIndex> entry : translatableType.getTranslationIndexes().entrySet()) {
+			for (Map.Entry<LanguageISOCode, LineIndex> entry : translatableType.getTranslationIndexes().entrySet()) {
 				tlMap.put(languageRepo.getLanguage(entry.getKey()), entry.getValue());
 			}
 			translationIndexMap.put(translatableType.getImplementation(), tlMap);
@@ -58,7 +59,7 @@ public class TranslationService implements Service<Translation> {
 	
 	public Translation parse(Translatable object, Language language, List<String> lineValues) {
 		LineIndex lineIdx = translationIndexMap.get(object.getClass()).get(language);
-		String translationValue = lineValues.get(lineIdx.INDEX);
+		String translationValue = lineValues.get(lineIdx.getIndex());
 		return create(object, language, translationValue);
 	}
 	
@@ -66,13 +67,13 @@ public class TranslationService implements Service<Translation> {
 		String parsed = null;
 		Class<? extends Translatable> tClass = object.getClass();
 		String textValue = object.getTextContent().getText();
-		LineIndex lineIdxEN = translationIndexMap.get(tClass).get(languageRepo.getLanguage("en"));
+		LineIndex lineIdxEN = translationIndexMap.get(tClass).get(languageRepo.getLanguage(LanguageISOCode.ENGLISH));
 		LineIndex lineIdxTranslate = translationIndexMap.get(tClass).get(language);
 		for (String line : dataLines) {
 			List<String> dataLineValues = LineIndex.getLineValues(line);
-			String labelEN = dataLineValues.get(lineIdxEN.INDEX);
+			String labelEN = dataLineValues.get(lineIdxEN.getIndex());
 			if (labelEN.equals(textValue)) {
-				parsed = dataLineValues.get(lineIdxTranslate.INDEX);
+				parsed = dataLineValues.get(lineIdxTranslate.getIndex());
 			}
 		}
 		return create(object, language, parsed);

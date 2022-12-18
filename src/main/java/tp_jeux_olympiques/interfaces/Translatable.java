@@ -10,6 +10,7 @@ import tp_jeux_olympiques.entities.Language;
 import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.TextContent;
 import tp_jeux_olympiques.entities.Translation;
+import tp_jeux_olympiques.enums.LanguageISOCode;
 import tp_jeux_olympiques.enums.LineIndex;
 
 public interface Translatable {
@@ -32,26 +33,23 @@ public interface Translatable {
 	public enum TranslatableType {
 	
 		COUNTRY(Country.class, Map.ofEntries(
-				new AbstractMap.SimpleEntry<String, LineIndex>("en", LineIndex.COUNTRY_NAME_EN),
-				new AbstractMap.SimpleEntry<String, LineIndex>("fr", LineIndex.COUNTRY_NAME_FR)
-			)
-		),
+			new AbstractMap.SimpleEntry<LanguageISOCode, LineIndex>(LanguageISOCode.ENGLISH, LineIndex.COUNTRY_NAME_EN),
+			new AbstractMap.SimpleEntry<LanguageISOCode, LineIndex>(LanguageISOCode.FRENCH, LineIndex.COUNTRY_NAME_FR)
+		)),
 		EVENT(Event.class, Map.ofEntries(
-				new AbstractMap.SimpleEntry<String, LineIndex>("en", LineIndex.EVENT_LABEL_EN),
-				new AbstractMap.SimpleEntry<String, LineIndex>("fr", LineIndex.EVENT_LABEL_FR)
-			)
-		),
+			new AbstractMap.SimpleEntry<LanguageISOCode, LineIndex>(LanguageISOCode.ENGLISH, LineIndex.EVENT_LABEL_EN),
+			new AbstractMap.SimpleEntry<LanguageISOCode, LineIndex>(LanguageISOCode.FRENCH, LineIndex.EVENT_LABEL_FR)
+		)),
 		SPORT(Sport.class, Map.ofEntries(
-				new AbstractMap.SimpleEntry<String, LineIndex>("en", LineIndex.SPORT_LABEL_EN),
-				new AbstractMap.SimpleEntry<String, LineIndex>("fr", LineIndex.SPORT_LABEL_FR)
-			)
-		);
+			new AbstractMap.SimpleEntry<LanguageISOCode, LineIndex>(LanguageISOCode.ENGLISH, LineIndex.SPORT_LABEL_EN),
+			new AbstractMap.SimpleEntry<LanguageISOCode, LineIndex>(LanguageISOCode.FRENCH, LineIndex.SPORT_LABEL_FR)
+		));
 		
 		private Class<? extends Translatable> implementation;
-		private Map<String, LineIndex> translationIndexes;
+		private Map<LanguageISOCode, LineIndex> translationIndexes;
 		
 		private TranslatableType(Class<? extends Translatable> implementation,
-				Map<String, LineIndex> translationIndexes)
+				Map<LanguageISOCode, LineIndex> translationIndexes)
 		{
 			this.implementation = implementation;
 			this.translationIndexes = translationIndexes;
@@ -61,7 +59,7 @@ public interface Translatable {
 			return implementation;
 		}
 		
-		public Map<String, LineIndex> getTranslationIndexes() {
+		public Map<LanguageISOCode, LineIndex> getTranslationIndexes() {
 			return Collections.unmodifiableMap(translationIndexes);
 		}
 		

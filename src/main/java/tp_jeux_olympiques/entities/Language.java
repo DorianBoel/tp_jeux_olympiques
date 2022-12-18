@@ -3,11 +3,13 @@ package tp_jeux_olympiques.entities;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import tp_jeux_olympiques.enums.LanguageISOCode;
 
 @Entity
 @Table(name = "language")
@@ -21,18 +23,19 @@ public class Language {
 	private String name;
 	
 	@Column(name = "code_iso", nullable = false, unique = true, length = 2)
-	private String codeISO;
+	@Convert(converter = LanguageISOCode.Converter.class)
+	private LanguageISOCode isoCode;
 	
 	public Language() { }
 	
-	public Language(String name, String codeIso) {
+	public Language(String name, LanguageISOCode isoCode) {
 		this.name = name;
-		this.codeISO = codeIso;
+		this.isoCode = isoCode;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(codeISO, name);
+		return Objects.hash(isoCode, name);
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class Language {
 			return false;
 		}
 		Language other = (Language) obj;
-		return Objects.equals(codeISO, other.codeISO) && Objects.equals(name, other.name);
+		return Objects.equals(isoCode, other.isoCode) && Objects.equals(name, other.name);
 	}
 
 	/**
@@ -66,12 +69,12 @@ public class Language {
 	}
 
 	/**
-	 * Getter for {@link #codeISO}.
+	 * Getter for {@link #isoCode}.
 	 *
 	 * @return
 	 */
-	public String getCodeISO() {
-		return codeISO;
+	public LanguageISOCode getISOCode() {
+		return isoCode;
 	}
 
 	/**
@@ -88,8 +91,8 @@ public class Language {
 	 *
 	 * @param The new ATTRIBUTE to replace the current one
 	 */
-	public void setCodeISO(String codeISO) {
-		this.codeISO = codeISO;
+	public void setISOCode(LanguageISOCode isoCode) {
+		this.isoCode = isoCode;
 	}
 	
 }

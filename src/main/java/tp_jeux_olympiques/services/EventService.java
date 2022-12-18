@@ -14,6 +14,7 @@ import tp_jeux_olympiques.entities.Event;
 import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.TextContent;
 import tp_jeux_olympiques.enums.Distinction;
+import tp_jeux_olympiques.enums.LanguageISOCode;
 import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.general.LanguageRepository;
 import tp_jeux_olympiques.interfaces.TranslatableService;
@@ -62,15 +63,15 @@ public class EventService implements TranslatableService<Event> {
 	}
 	
 	public Event parse(List<String> lineValues, List<String> eventLines) {
-		String label = lineValues.get(LineIndex.EVENT.INDEX);
-		String sportName = lineValues.get(LineIndex.SPORT.INDEX);
+		String label = lineValues.get(LineIndex.EVENT.getIndex());
+		String sportName = lineValues.get(LineIndex.SPORT.getIndex());
 		Distinction distinction = parseDistinction(label);
 		String sportNameStart = sportName + StringUtils.SPACE;
 		if (label.startsWith(sportNameStart)) {
 			label = label.replace(sportNameStart, StringUtils.EMPTY);
 		}
 		Sport sport = sportService.findByLabel(sportName);
-		TextContent textContent = createTextContent(label, languageRepo.getLanguage("en"));
+		TextContent textContent = createTextContent(label, languageRepo.getLanguage(LanguageISOCode.ENGLISH));
 		Event event = create(textContent, distinction, sport);
 		return event;
 	}
