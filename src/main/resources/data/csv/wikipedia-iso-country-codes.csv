@@ -215,6 +215,7 @@ NPA;Athlètes paralympiques neutres;Neutral Paralympic Athletes;;N
 PNA;Athlètes paralympiques neutres;Paralympic Neurtral Athletes;;N
 RPC;Comité paralympique russe;Russian Paralympic Comitee;;N
 RPT;Équipe paralympique des réfugiés;Refugee Paralympic Team;;N
+IOA;Athlètes olympiques indépendants;Independent Olympic Athletes;;N
 HLN;Iroquois;Iroquois;;N
 MAC;Macao;Macau;;O
 FRO;Iles Féroé;Faroe Islands;;O
@@ -259,3 +260,7 @@ WSM;Samoa;Western Samoa;;O
 YAR;Yemen du Nord;North Yemen;;O
 YMD;Yemen du Sud;South Yemen;;O
 ZAI;Zaïre;Zaire;;O
+CRT;Crète;Crete;;O
+WIF;Cirque;Circus;;O
+UNK;Inconnu;Unknown;;O
+NFL;Terre-Neuve;Newfoudland;;O
