@@ -23,7 +23,7 @@ public class Team {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, length = 75)
 	private String name;
 	
 	@Column(name = "code_ioc", nullable = false, length = 3)

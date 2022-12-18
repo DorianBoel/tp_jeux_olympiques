@@ -6,7 +6,7 @@ import java.util.List;
 public enum LineIndex {
 
 	ATHLETE_NAME(1),
-	ATHLETE_SEX(2),
+	ATHLETE_GENDER(2),
 	ATHLETE_AGE(3),
 	ATHLETE_HEIGHT(4),
 	ATHLETE_WEIGHT(5),
@@ -34,10 +34,14 @@ public enum LineIndex {
 	
 	public static final String SEPARATOR_SEMICOLON = ";";
 	
-	public final int INDEX;
+	private final int index;
 	
 	LineIndex(int index) {
-		INDEX = index;
+		this.index = index;
+	}
+	
+	public int getIndex() {
+		return index;
 	}
 	
 }

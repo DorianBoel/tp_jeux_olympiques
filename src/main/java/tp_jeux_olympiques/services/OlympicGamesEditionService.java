@@ -39,8 +39,8 @@ public class OlympicGamesEditionService implements Service<OlympicGamesEdition> 
 	}
 	
 	public OlympicGamesEdition parse(List<String> lineValues, City city) {
-		String yearStr = lineValues.get(LineIndex.GAMES_YEAR.INDEX);
-		String seasonStr = lineValues.get(LineIndex.GAMES_SEASON.INDEX);
+		String yearStr = lineValues.get(LineIndex.GAMES_YEAR.getIndex());
+		String seasonStr = lineValues.get(LineIndex.GAMES_SEASON.getIndex());
 		int year = Integer.parseInt(yearStr);
 		Season season = Season.valueOf(seasonStr.toUpperCase());
 		return create(year, season, city);

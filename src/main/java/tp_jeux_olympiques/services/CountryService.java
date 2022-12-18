@@ -9,6 +9,7 @@ import java.util.Set;
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.entities.Country;
 import tp_jeux_olympiques.entities.TextContent;
+import tp_jeux_olympiques.enums.LanguageISOCode;
 import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.general.LanguageRepository;
 import tp_jeux_olympiques.interfaces.TranslatableService;
@@ -37,7 +38,7 @@ public class CountryService implements TranslatableService<Country> {
 	}
 	
 	private String parseIsoCode(List<String> lineValues) {
-		String isoCode = lineValues.get(LineIndex.COUNTRY_ISO.INDEX);
+		String isoCode = lineValues.get(LineIndex.COUNTRY_ISO.getIndex());
 		return isoCode.length() > 0 ? isoCode : null;
 	}
 
@@ -46,10 +47,10 @@ public class CountryService implements TranslatableService<Country> {
 	}
 	
 	public Country parse(List<String> lineValues) {
-		String name = lineValues.get(LineIndex.COUNTRY_NAME_EN.INDEX);
+		String name = lineValues.get(LineIndex.COUNTRY_NAME_EN.getIndex());
 		String isoCode = parseIsoCode(lineValues);
-		boolean obsolete = lineValues.get(LineIndex.COUNTRY_OBSOLETE.INDEX).equals("O");
-		TextContent textContent = createTextContent(name, languageRepo.getLanguage("en"));
+		boolean obsolete = lineValues.get(LineIndex.COUNTRY_OBSOLETE.getIndex()).equals("O");
+		TextContent textContent = createTextContent(name, languageRepo.getLanguage(LanguageISOCode.ENGLISH));
 		return create(textContent, isoCode, obsolete);
 	}
 	

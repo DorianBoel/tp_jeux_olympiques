@@ -16,7 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import tp_jeux_olympiques.enums.Sex;
+import tp_jeux_olympiques.enums.Gender;
 
 @Entity
 @Table(name = "athlete")
@@ -26,7 +26,7 @@ public class Athlete {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(nullable = false, length = 100)
+	@Column(nullable = false, length = 150)
 	public String name;
 	
 	@Column(name = "birth_year")
@@ -40,19 +40,19 @@ public class Athlete {
 	
 	@Column(nullable = false, length = 15)
 	@Enumerated(value = EnumType.STRING)
-	public Sex sex;
+	public Gender gender;
 	
 	@OneToMany(mappedBy = "athlete")
 	private Set<Performance> performances = new HashSet<>();
 
 	public Athlete() { }
 
-	public Athlete(String name, Integer birthYear, Float height, Float weight, Sex sex) {
+	public Athlete(String name, Integer birthYear, Float height, Float weight, Gender gender) {
 		this.name = name;
 		this.birthYear = birthYear;
 		this.height = height;
 		this.weight = weight;
-		this.sex = sex;
+		this.gender = gender;
 	}
 	
 	public void addPerformance (Performance performance) {
@@ -61,7 +61,7 @@ public class Athlete {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(height, name, sex, weight);
+		return Objects.hash(height, name, gender, weight);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class Athlete {
 		}
 		Athlete other = (Athlete) obj;
 		return Objects.equals(height, other.height) && Objects.equals(name, other.name)
-				&& sex == other.sex && Objects.equals(weight, other.weight);
+				&& gender == other.gender && Objects.equals(weight, other.weight);
 	}
 
 	/**
@@ -123,12 +123,12 @@ public class Athlete {
 	}
 
 	/**
-	 * Getter for {@link #sex}.
+	 * Getter for {@link #gender}.
 	 *
 	 * @return
 	 */
-	public Sex getSex() {
-		return sex;
+	public Gender getGender() {
+		return gender;
 	}
 
 	/**
@@ -177,12 +177,12 @@ public class Athlete {
 	}
 
 	/**
-	 * Setter for {@link #sex}.
+	 * Setter for {@link #gender}.
 	 *
 	 * @param The new ATTRIBUTE to replace the current one
 	 */
-	public void setSex(Sex sex) {
-		this.sex = sex;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 	
 }

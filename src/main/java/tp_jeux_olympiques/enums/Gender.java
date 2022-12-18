@@ -1,13 +1,13 @@
 package tp_jeux_olympiques.enums;
 
-public enum Sex {
+public enum Gender {
 
 	FEMALE("F"),
 	MALE("M");
 	
 	private String label;
 	
-	private Sex(String label) {
+	private Gender(String label) {
 		this.label = label;
 	}
 

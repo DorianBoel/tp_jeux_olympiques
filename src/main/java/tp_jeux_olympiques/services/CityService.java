@@ -37,7 +37,7 @@ public class CityService implements Service<City> {
 	}
 	
 	public City parse(List<String> lineValues) {
-		String name = lineValues.get(LineIndex.CITY.INDEX);
+		String name = lineValues.get(LineIndex.CITY.getIndex());
 		return create(name);
 	}
 	

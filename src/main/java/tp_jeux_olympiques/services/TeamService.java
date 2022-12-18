@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.entities.Country;
 import tp_jeux_olympiques.entities.Team;
@@ -32,8 +34,8 @@ public class TeamService implements Service<Team> {
 	private Country parseCountry(String code, List<String> countryLines) {
 		for (String line : countryLines) {
 			List<String> countryLineValues = Arrays.asList(line.split(LineIndex.SEPARATOR_SEMICOLON));
-			String countryIOC = countryLineValues.get(LineIndex.COUNTRY_CIO.INDEX);
-			String countryName = countryLineValues.get(LineIndex.COUNTRY_NAME_EN.INDEX);
+			String countryIOC = countryLineValues.get(LineIndex.COUNTRY_CIO.getIndex());
+			String countryName = countryLineValues.get(LineIndex.COUNTRY_NAME_EN.getIndex());
 			if (countryIOC.equals(code)) {
 				return countryService.findByName(countryName);
 			}
@@ -53,8 +55,10 @@ public class TeamService implements Service<Team> {
 	}
 	
 	public Team parse(List<String> lineValues, List<String> countryLines) {
-		String name = lineValues.get(LineIndex.TEAM_NAME.INDEX);
-		String code = lineValues.get(LineIndex.TEAM_CODE.INDEX);
+		String name = lineValues.get(LineIndex.TEAM_NAME.getIndex()).replaceAll("\"(?!\")", StringUtils.EMPTY);;
+		String code = lineValues.get(LineIndex.TEAM_CODE.getIndex());
+		System.out.println(code);
+		System.out.println(name);
 		Country country = parseCountry(code, countryLines);
 		return create(name, code, country);
 	}

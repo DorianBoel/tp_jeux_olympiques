@@ -38,7 +38,7 @@ public class PerformanceService implements Service<Performance> {
 	}
 	
 	private Medal parseMedal(List<String> lineValues) {
-		String medalStr = lineValues.get(LineIndex.MEDAL.INDEX);
+		String medalStr = lineValues.get(LineIndex.MEDAL.getIndex());
 		for (Medal medal : Medal.values()) {
 			if (medal.toString().equalsIgnoreCase(medalStr)) {
 				return medal;

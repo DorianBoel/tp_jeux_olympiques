@@ -9,6 +9,7 @@ import java.util.Set;
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.entities.Sport;
 import tp_jeux_olympiques.entities.TextContent;
+import tp_jeux_olympiques.enums.LanguageISOCode;
 import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.general.LanguageRepository;
 import tp_jeux_olympiques.interfaces.TranslatableService;
@@ -41,8 +42,8 @@ public class SportService implements TranslatableService<Sport> {
 	}
 	
 	public Sport parse(List<String> lineValues) {
-		String name = lineValues.get(LineIndex.SPORT_LABEL_EN.INDEX);
-		TextContent textContent = createTextContent(name, languageRepo.getLanguage("en"));
+		String name = lineValues.get(LineIndex.SPORT_LABEL_EN.getIndex());
+		TextContent textContent = createTextContent(name, languageRepo.getLanguage(LanguageISOCode.ENGLISH));
 		return create(textContent);
 	}
 	

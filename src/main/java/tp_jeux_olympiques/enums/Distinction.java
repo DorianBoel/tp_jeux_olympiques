@@ -7,17 +7,17 @@ import java.util.Set;
 
 public enum Distinction {
 
-	MENS("Men's", Sex.MALE),
-	WOMENS("Women's", Sex.FEMALE),
-	MIXED("Mixed", Sex.FEMALE, Sex.MALE);
+	MENS("Men's", Gender.MALE),
+	WOMENS("Women's", Gender.FEMALE),
+	MIXED("Mixed", Gender.FEMALE, Gender.MALE);
 	
 	private String label;
 	
-	private Set<Sex> sexes = new HashSet<>();
+	private Set<Gender> genders = new HashSet<>();
 	
-	private Distinction(String label, Sex... sexes) {
+	private Distinction(String label, Gender... genders) {
 		this.label = label;
-		this.sexes.addAll(Arrays.asList(sexes));
+		this.genders.addAll(Arrays.asList(genders));
 	}
 
 	/**
@@ -30,13 +30,12 @@ public enum Distinction {
 	}
 
 	/**
-	 * Getter for {@link #sexes}.
+	 * Getter for {@link #genders}.
 	 *
 	 * @return
 	 */
-	public Set<Sex> getSexes() {
-		return Collections.unmodifiableSet(sexes);
+	public Set<Gender> getgenders() {
+		return Collections.unmodifiableSet(genders);
 	}
-	
 	
 }

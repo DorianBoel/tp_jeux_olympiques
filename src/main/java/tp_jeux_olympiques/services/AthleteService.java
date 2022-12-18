@@ -13,7 +13,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.entities.Athlete;
 import tp_jeux_olympiques.enums.LineIndex;
-import tp_jeux_olympiques.enums.Sex;
+import tp_jeux_olympiques.enums.Gender;
 import tp_jeux_olympiques.interfaces.Service;
 
 public class AthleteService implements Service<Athlete> {
@@ -37,11 +37,11 @@ public class AthleteService implements Service<Athlete> {
 			.orElse(athlete);		
 	}
 	
-	private Sex parseSex(List<String> lineValues) {
-		String sexStr = lineValues.get(LineIndex.ATHLETE_SEX.INDEX);
-		for (Sex sex : Sex.values()) {
-			if (sex.getLabel().equals(sexStr)) {
-				return sex;
+	private Gender parseGender(List<String> lineValues) {
+		String genderStr = lineValues.get(LineIndex.ATHLETE_GENDER.getIndex());
+		for (Gender gender : Gender.values()) {
+			if (gender.getLabel().equals(genderStr)) {
+				return gender;
 			}
 		}
 		return null;
@@ -56,22 +56,23 @@ public class AthleteService implements Service<Athlete> {
 		}
 	}
 
-	public Athlete create(String name, Integer birthYear, Float height, Float weight, Sex sex) {
-		return new Athlete(name, birthYear, height, weight, sex);
+	public Athlete create(String name, Integer birthYear, Float height, Float weight, Gender gender) {
+		return new Athlete(name, birthYear, height, weight, gender);
 	}
 	
 	public Athlete parse(List<String> lineValues) {
 		Function<String, Float> parseFloat = s -> NumberUtils.isCreatable(s) ? NumberUtils.createFloat(s) : null;
-		String name = lineValues.get(LineIndex.ATHLETE_NAME.INDEX).replaceAll("\"(?!\")", StringUtils.EMPTY);
-		String ageStr = lineValues.get(LineIndex.ATHLETE_AGE.INDEX);
-		String heightStr = lineValues.get(LineIndex.ATHLETE_HEIGHT.INDEX);
-		String weightStr = lineValues.get(LineIndex.ATHLETE_WEIGHT.INDEX);
-		String yearStr = lineValues.get(LineIndex.GAMES_YEAR.INDEX);
+		String name = lineValues.get(LineIndex.ATHLETE_NAME.getIndex()).replaceAll("\"(?!\")", StringUtils.EMPTY);
+		name = name.trim();
+		String ageStr = lineValues.get(LineIndex.ATHLETE_AGE.getIndex());
+		String heightStr = lineValues.get(LineIndex.ATHLETE_HEIGHT.getIndex());
+		String weightStr = lineValues.get(LineIndex.ATHLETE_WEIGHT.getIndex());
+		String yearStr = lineValues.get(LineIndex.GAMES_YEAR.getIndex());
 		Float height = parseFloat.apply(heightStr);
 		Float weight = parseFloat.apply(weightStr);
 		Integer birthYear = parseBirthYear(yearStr, ageStr);
-		Sex sex = parseSex(lineValues);
-		return create(name, birthYear, height, weight, sex);
+		Gender gender = parseGender(lineValues);
+		return create(name, birthYear, height, weight, gender);
 	}
 	
 	@Override
