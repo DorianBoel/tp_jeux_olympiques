@@ -1,4 +1,4 @@
-**/persistence.xml
+**/main/**/persistence.xml
 .DS_Store
 .settings/
 target/
