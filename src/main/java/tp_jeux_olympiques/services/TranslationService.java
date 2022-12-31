@@ -13,6 +13,7 @@ import tp_jeux_olympiques.entities.Language;
 import tp_jeux_olympiques.entities.Translation;
 import tp_jeux_olympiques.enums.LanguageISOCode;
 import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.general.GeneralUtils;
 import tp_jeux_olympiques.general.LanguageRepository;
 import tp_jeux_olympiques.interfaces.Service;
 import tp_jeux_olympiques.interfaces.Translatable;
@@ -70,7 +71,7 @@ public class TranslationService implements Service<Translation> {
 		LineIndex lineIdxEN = translationIndexMap.get(tClass).get(languageRepo.getLanguage(LanguageISOCode.ENGLISH));
 		LineIndex lineIdxTranslate = translationIndexMap.get(tClass).get(language);
 		for (String line : dataLines) {
-			List<String> dataLineValues = LineIndex.getLineValues(line);
+			List<String> dataLineValues = GeneralUtils.getLineValues(line);
 			String labelEN = dataLineValues.get(lineIdxEN.getIndex());
 			if (labelEN.equals(textValue)) {
 				parsed = dataLineValues.get(lineIdxTranslate.getIndex());

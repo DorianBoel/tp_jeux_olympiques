@@ -72,8 +72,7 @@ public class EventService implements TranslatableService<Event> {
 		}
 		Sport sport = sportService.findByLabel(sportName);
 		TextContent textContent = createTextContent(label, languageRepo.getLanguage(LanguageISOCode.ENGLISH));
-		Event event = create(textContent, distinction, sport);
-		return event;
+		return create(textContent, distinction, sport);
 	}
 	
 	@Override

@@ -34,7 +34,7 @@ public enum Distinction {
 	 *
 	 * @return
 	 */
-	public Set<Gender> getgenders() {
+	public Set<Gender> getGenders() {
 		return Collections.unmodifiableSet(genders);
 	}
 	

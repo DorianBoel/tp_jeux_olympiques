@@ -27,16 +27,16 @@ public class Athlete {
 	private int id;
 
 	@Column(nullable = false, length = 150)
-	public String name;
+	private String name;
 	
 	@Column(name = "birth_year")
-	public Integer birthYear;
+	private Integer birthYear;
 	
 	@Column
-	public Float height;
+	private Float height;
 	
 	@Column
-	public Float weight;
+	private Float weight;
 	
 	@Column(nullable = false, length = 15)
 	@Enumerated(value = EnumType.STRING)

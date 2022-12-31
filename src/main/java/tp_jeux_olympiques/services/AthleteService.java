@@ -7,13 +7,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import jakarta.persistence.EntityManager;
 import tp_jeux_olympiques.entities.Athlete;
-import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.enums.Gender;
+import tp_jeux_olympiques.enums.LineIndex;
+import tp_jeux_olympiques.general.GeneralUtils;
 import tp_jeux_olympiques.interfaces.Service;
 
 public class AthleteService implements Service<Athlete> {
@@ -62,8 +62,7 @@ public class AthleteService implements Service<Athlete> {
 	
 	public Athlete parse(List<String> lineValues) {
 		Function<String, Float> parseFloat = s -> NumberUtils.isCreatable(s) ? NumberUtils.createFloat(s) : null;
-		String name = lineValues.get(LineIndex.ATHLETE_NAME.getIndex()).replaceAll("\"(?!\")", StringUtils.EMPTY);
-		name = name.trim();
+		String name = GeneralUtils.unescapeDoubleQuotes(lineValues.get(LineIndex.ATHLETE_NAME.getIndex())).trim();
 		String ageStr = lineValues.get(LineIndex.ATHLETE_AGE.getIndex());
 		String heightStr = lineValues.get(LineIndex.ATHLETE_HEIGHT.getIndex());
 		String weightStr = lineValues.get(LineIndex.ATHLETE_WEIGHT.getIndex());

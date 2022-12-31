@@ -7,12 +7,12 @@ public enum CSVFile {
 	COUNTRY_CODES("wikipedia-iso-country-codes"),
 	PERFORMANCES("athlete_epreuves");
 	
-	private static final String CSV_EXTENSION = ".csv";
+	private static final String extension = ".csv";
 	
 	private String fileName;
 	
 	private CSVFile(String fileName) {
-		this.fileName = fileName + CSV_EXTENSION;
+		this.fileName = fileName + extension;
 	}
 
 	/**

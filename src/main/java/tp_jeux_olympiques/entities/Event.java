@@ -33,7 +33,7 @@ public class Event implements Translatable {
 	
 	@Column(nullable = false, length = 15)
 	@Enumerated(value = EnumType.STRING)
-	public Distinction distinction;
+	private Distinction distinction;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_sport", nullable = false)

@@ -1,8 +1,5 @@
 package tp_jeux_olympiques.enums;
 
-import java.util.Arrays;
-import java.util.List;
-
 public enum LineIndex {
 
 	ATHLETE_NAME(1),
@@ -27,12 +24,6 @@ public enum LineIndex {
 	COUNTRY_NAME_EN(2),
 	COUNTRY_ISO(3),
 	COUNTRY_OBSOLETE(4);
-	
-	public static List<String> getLineValues (String line) {
-		return Arrays.asList(line.split(LineIndex.SEPARATOR_SEMICOLON));
-	}
-	
-	public static final String SEPARATOR_SEMICOLON = ";";
 	
 	private final int index;
 	

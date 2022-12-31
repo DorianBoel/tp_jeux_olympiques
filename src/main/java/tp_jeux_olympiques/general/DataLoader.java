@@ -1,7 +1,6 @@
 package tp_jeux_olympiques.general;
 
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
@@ -17,7 +16,6 @@ import tp_jeux_olympiques.entities.Team;
 import tp_jeux_olympiques.entities.Translation;
 import tp_jeux_olympiques.enums.CSVFile;
 import tp_jeux_olympiques.enums.LanguageISOCode;
-import tp_jeux_olympiques.enums.LineIndex;
 import tp_jeux_olympiques.services.AthleteService;
 import tp_jeux_olympiques.services.CityService;
 import tp_jeux_olympiques.services.CountryService;
@@ -67,7 +65,7 @@ public class DataLoader {
 		List<String> performanceLines = fileAccess.getLines(CSVFile.PERFORMANCES);
 		
 		for (int i = 1; i < countryLines.size(); i++) {
-			List<String> lineValues = splitLine(countryLines.get(i));
+			List<String> lineValues = GeneralUtils.getLineValues(countryLines.get(i));
 			
 			Country country = countryService.parse(lineValues);
 			countryService.register(country);
@@ -77,7 +75,7 @@ public class DataLoader {
 		}
 		
 		for (int i = 1; i < sportLines.size(); i++) {
-			List<String> lineValues = splitLine(sportLines.get(i));
+			List<String> lineValues = GeneralUtils.getLineValues(sportLines.get(i));
 			
 			Sport sport = sportService.parse(lineValues);
 			sportService.register(sport);
@@ -87,7 +85,7 @@ public class DataLoader {
 		}
 		
 		for (int i = 1; i < performanceLines.size(); i++) {
-			List<String> lineValues = splitLine(performanceLines.get(i));
+			List<String> lineValues = GeneralUtils.getLineValues(performanceLines.get(i));
 
 			Team team = teamService.parse(lineValues, countryLines);
 			team = teamService.register(team);
@@ -110,10 +108,6 @@ public class DataLoader {
 			performanceService.register(performance);
 		}
 		entityManager.getTransaction().commit();
-	}
-	
-	private static List<String> splitLine(String line) {
-		return Arrays.asList(line.split(LineIndex.SEPARATOR_SEMICOLON));
 	}
 
 }
