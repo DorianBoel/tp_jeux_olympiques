@@ -37,9 +37,11 @@ public class Translation {
 	public Translation(String value, Language language, TextContent textContent) {
 		this.value = value;
 		this.language = language;
-		this.textContent = textContent;
-		textContent.addTranslation(this);
-		id = new TranslationKey(language.getId(), textContent.getId());
+		if (textContent != null) {			
+			this.textContent = textContent;
+			textContent.addTranslation(this);
+			id = new TranslationKey(language.getId(), textContent.getId());
+		}
 	}
 
 	@Override

@@ -24,6 +24,9 @@ public enum LanguageISOCode {
 
 		@Override
 		public String convertToDatabaseColumn(LanguageISOCode attribute) {
+			if (attribute == null) {
+				return null;
+			}
 			return attribute.getCode();
 		}
 
