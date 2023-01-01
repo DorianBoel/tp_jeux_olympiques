@@ -31,8 +31,6 @@ public class Translation {
 	@MapsId(value = "idTextContent")
 	@JoinColumn(name = "id_text_content")
 	private TextContent textContent;
-	
-	public Translation() { }
 
 	public Translation(String value, Language language, TextContent textContent) {
 		this.value = value;

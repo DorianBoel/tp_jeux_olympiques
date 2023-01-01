@@ -42,8 +42,6 @@ public class Performance {
 	@JoinColumn(name = "id_games")
 	private OlympicGamesEdition olympicGamesEdition;
 
-	public Performance() { }
-
 	public Performance(Athlete athlete, Event event, Team team, OlympicGamesEdition olympicGamesEdition, Medal medal) {
 		this.athlete = athlete;
 		athlete.addPerformance(this);

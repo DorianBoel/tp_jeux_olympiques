@@ -29,8 +29,6 @@ public class City {
 	@OneToMany(mappedBy = "city")
 	private Set<OlympicGamesEdition> olympicGamesEditions = new HashSet<>();
 
-	public City() { }
-
 	public City(String name) {
 		this.name = name;
 	}

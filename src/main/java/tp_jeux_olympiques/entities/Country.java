@@ -39,8 +39,6 @@ public class Country implements Translatable {
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "id_text_content")
 	private TextContent textContent;
-
-	public Country() { }
 	
 	public Country(String name, Language language, String codeISO, boolean obsolete) {
 		this.textContent = new TextContent(name, language);

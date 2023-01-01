@@ -45,8 +45,6 @@ public class Athlete {
 	@OneToMany(mappedBy = "athlete")
 	private Set<Performance> performances = new HashSet<>();
 
-	public Athlete() { }
-
 	public Athlete(String name, Integer birthYear, Float height, Float weight, Gender gender) {
 		this.name = name;
 		this.birthYear = birthYear;

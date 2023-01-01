@@ -45,8 +45,6 @@ public class Event implements Translatable {
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "id_text_content")
 	private TextContent textContent;
-
-	public Event() { }
 	
 	public Event (TextContent textContent, Distinction distinction, Sport sport) {
 		this.textContent = textContent;

@@ -26,8 +26,6 @@ public class Language {
 	@Convert(converter = LanguageISOCode.Converter.class)
 	private LanguageISOCode isoCode;
 	
-	public Language() { }
-	
 	public Language(String name, LanguageISOCode isoCode) {
 		this.name = name;
 		this.isoCode = isoCode;

@@ -33,8 +33,6 @@ public class TextContent {
 
 	@OneToMany(mappedBy = "textContent", cascade = CascadeType.MERGE)
 	private Set<Translation> translations = new HashSet<>();
-
-	public TextContent() { }
 	
 	public TextContent(String text, Language language) {
 		this.text = text;

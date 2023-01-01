@@ -1,8 +1,5 @@
 package tp_jeux_olympiques.enums;
 
-import jakarta.persistence.Entity;
-
-@Entity
 public enum Medal {
 
 	GOLD(1),

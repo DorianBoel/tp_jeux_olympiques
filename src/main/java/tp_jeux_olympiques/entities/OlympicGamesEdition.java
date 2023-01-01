@@ -41,8 +41,6 @@ public class OlympicGamesEdition {
 	
 	@OneToMany(mappedBy = "olympicGamesEdition")
 	private Set<Performance> performances = new HashSet<>();
-	
-	public OlympicGamesEdition() { }
 
 	public OlympicGamesEdition(int year, Season season, City city) {
 		this.year = year;

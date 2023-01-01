@@ -55,8 +55,6 @@ public class TeamService implements Service<Team> {
 	public Team parse(List<String> lineValues, List<String> countryLines) {
 		String name = GeneralUtils.unescapeDoubleQuotes(lineValues.get(LineIndex.TEAM_NAME.getIndex())).trim();
 		String code = lineValues.get(LineIndex.TEAM_CODE.getIndex());
-		System.out.println(code);
-		System.out.println(name);
 		Country country = parseCountry(code, countryLines);
 		return create(name, code, country);
 	}

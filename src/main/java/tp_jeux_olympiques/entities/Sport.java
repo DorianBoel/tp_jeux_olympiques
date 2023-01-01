@@ -30,8 +30,6 @@ public class Sport implements Translatable {
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "id_text_content")
 	private TextContent textContent;
-	
-	public Sport() { }
 
 	public Sport(String label, Language language) {
 		textContent = new TextContent(label, language);

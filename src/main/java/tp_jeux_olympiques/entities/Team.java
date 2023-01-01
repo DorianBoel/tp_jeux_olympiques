@@ -35,8 +35,6 @@ public class Team {
 	
 	@OneToMany(mappedBy = "team")
 	private Set<Performance> performances = new HashSet<>();
-
-	public Team() { }
 	
 	public Team(String name, String codeIOC, Country country) {
 		this.name = name;
